@@ -5,9 +5,11 @@
 	TabbedPanelItem:
 		id: tab_preprocess
 		text: 'Preprocess'
+
 		BoxLayout:
 			orientation: 'vertical'
 			BoxLayout:
+				# pos: (0, self.y)
 				Button:
 					text: 'Internet'
 				Button:
@@ -18,7 +20,26 @@
 				TextInput:
 					text: 'default'
 				Button:
-					text: 'Import'			
+					text: 'Import'	
+			BoxLayout:
+				BoxLayout:
+					orientation: 'vertical'
+					ScrollView:
+						Label:
+							color: (0, 1, 1, .5)
+							text: str('abracadabra ' * 1000)
+							text_size: self.width, None
+							size_hint_y: None
+							height: self.texture_size[1]
+					Button:
+						text: 'Drop'
+				ScrollView:
+					Label:
+						color: (0, 1, 1, .5)
+						text: str('abracadabra ' * 1000)
+						text_size: self.width, None
+						size_hint_y: None
+						height: self.texture_size[1]
 	TabbedPanelItem:
 		id: tab_predict
 		text: 'Predict'
@@ -26,4 +47,3 @@
 	TabbedPanelItem:
 		id: tab_optimize
 		text: 'Optimize'
-   
