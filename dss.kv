@@ -1,0 +1,80 @@
+<RootWidget>:
+	do_default_tab: False
+	tab_width: self.size[0] / len(self.tab_list)
+
+	TabbedPanelItem:
+		id: tab_preprocess
+		text: 'Preprocess'
+
+		BoxLayout:
+			orientation: 'vertical'
+			
+			BoxLayout:
+				id: layout
+				size_hint_y: None
+				spacing: 10
+				padding: [5, 5, 5, 5]
+
+				Label:
+					
+					text: 'Choose source of DB:'
+					size: self.texture_size
+					halign: 'left'
+					valign: 'bottom'
+					size_hint: (.2, .5)
+					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+				
+				Button:
+					text: 'Internet'
+					spacing: (10, 0)
+					size_hint: (.25, .5)
+					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+				
+				Button:
+					text: 'Local File'
+					size_hint: (.25, .5)
+					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+			BoxLayout:
+				size_hint_y: None
+				size: (self.width, 50)
+				
+				Label:
+					text: 'File Dest.'
+				TextInput:
+					text: 'default'
+				Button:
+					text: 'Import'	
+			
+			BoxLayout:
+				
+				BoxLayout:
+					orientation: 'vertical'
+					
+					ScrollView:
+						
+						Label:
+							color: (0, 1, 1, .5)
+							text: str('abracadabra ' * 1000)
+							text_size: self.width, None
+							size_hint_y: None
+							height: self.texture_size[1]
+					Button:
+						text: 'Drop'
+				
+				ScrollView:
+					
+					Label:
+						color: (0, 1, 1, .5)
+						text: str('abracadabra ' * 1000)
+						text_size: self.width, None
+						size_hint_y: None
+						height: self.texture_size[1]
+	
+	TabbedPanelItem:
+		id: tab_predict
+		text: 'Predict'
+
+	TabbedPanelItem:
+		id: tab_optimize
+		text: 'Optimize'
