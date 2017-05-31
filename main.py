@@ -3,13 +3,12 @@ from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 
 
-class RootWidget(FloatLayout):
+class RootWidget(TabbedPanel):
     pass
 
-
-class MainApp(App):
+class DssApp(App):
     def build(self):
         return RootWidget()
 
 if __name__ == '__main__':
-    MainApp().run()
+    DssApp().run()

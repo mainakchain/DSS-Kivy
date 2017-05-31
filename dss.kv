@@ -1,0 +1,29 @@
+<RootWidget>:
+	do_default_tab: False
+	tab_width: self.size[0] / len(self.tab_list)
+
+	TabbedPanelItem:
+		id: tab_preprocess
+		text: 'Preprocess'
+		BoxLayout:
+			orientation: 'vertical'
+			BoxLayout:
+				Button:
+					text: 'Internet'
+				Button:
+					text: 'Local File'
+			BoxLayout:
+				Label:
+					text: 'File Dest.'
+				TextInput:
+					text: 'default'
+				Button:
+					text: 'Import'			
+	TabbedPanelItem:
+		id: tab_predict
+		text: 'Predict'
+
+	TabbedPanelItem:
+		id: tab_optimize
+		text: 'Optimize'
+   
