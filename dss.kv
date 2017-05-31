@@ -13,38 +13,93 @@
 				id: layout
 				size_hint_y: None
 				spacing: 10
-				padding: [5, 5, 5, 5]
+				padding: [10, 10, 10, 10]
+
+
+				BoxLayout:
+					size_hint: (.01, .5)
+
 
 				Label:
 					
 					text: 'Choose source of DB:'
-					size: self.texture_size
+					size: self.texture_size # for wrapping
+					text_size: self.width, None
 					halign: 'left'
 					valign: 'bottom'
 					size_hint: (.2, .5)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+
+
+				BoxLayout:
+					size_hint: (.09, .5)
+
 				
 				Button:
 					text: 'Internet'
-					spacing: (10, 0)
-					size_hint: (.25, .5)
-					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
-				
-				Button:
-					text: 'Local File'
-					size_hint: (.25, .5)
+					spacing: (20, 0)
+					size_hint: (.2, .4)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-			BoxLayout:
-				size_hint_y: None
-				size: (self.width, 50)
+
+				BoxLayout:
+					size_hint: (.15, .5)
 				
+
+
+				Button:
+					text: 'Local File'
+					size_hint: (.2, .4)
+					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+				BoxLayout:
+					size_hint: (.15, .5)
+			
+
+			BoxLayout:
+				id: layout
+				size_hint_y: None
+				spacing: 10
+				padding: [5, 5, 5, 5]
+
+
+				
+				BoxLayout:
+					size_hint: (.01, .5)
+
+		
 				Label:
 					text: 'File Dest.'
-				TextInput:
+					size: self.texture_size # for wrapping
+					text_size: self.width, None
+					halign: 'left'
+					valign: 'bottom'
+					size_hint: (.2, .5)
+					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+
+				BoxLayout:
+					size_hint: (.09, .5)
+
+				Label:
+					background_color: [105, 105, 105, 1]
 					text: 'default'
+					spacing: (20, 0)
+					size_hint: (.2, .4)
+					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+
+				BoxLayout:
+					size_hint: (.15, .5)
+				
 				Button:
 					text: 'Import'	
+					size_hint: (.2, .4)
+					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+				BoxLayout:
+					size_hint: (.15, .5)
 			
 			BoxLayout:
 				
