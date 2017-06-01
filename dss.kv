@@ -41,6 +41,7 @@
 					spacing: (20, 0)
 					size_hint: (.2, .4)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+					on_press: root.internet_popup(*args)
 
 
 				BoxLayout:
@@ -133,3 +134,22 @@
 	TabbedPanelItem:
 		id: tab_optimize
 		text: 'Optimize'
+
+
+<InternetPopup>:
+	title: 'Choose File'
+	size_hint: (None, None)
+	size: (600, 100)
+	GridLayout:
+		spacing: (10, 0)
+		padding: [5, 5, 5, 5]
+		cols: 3
+		Label:
+		    size_hint_x: .2
+			text: 'Paste file link:'
+		ScrollView:
+			size_hint: (.5, 1)
+			TextInput:
+		Button:
+			size_hint_x: .1
+			text: 'Go'
