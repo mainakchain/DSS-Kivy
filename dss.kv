@@ -75,18 +75,26 @@
 					valign: 'bottom'
 					size_hint: (.2, .5)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
-
-
+				
 				BoxLayout:
-					size_hint: (.09, .5)
 
-				Label:
-					#background_color: [1, 0, 0, 1]
-					text: 'default'
-					spacing: (20, 0)
-					size_hint: (.2, .4)
+
+					size_hint: (.3, .4)
+
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
-
+					
+					ScrollView:
+						do_scroll_x: True
+						do_scroll_y: False 
+						# size: self.size
+						
+						Label:
+							id: display_file_name
+							text: root.file_name
+							text_size: None, None
+							size_hint_x: None
+							width: self.texture_size[0]
+							# spacing: (20, 0)
 
 				BoxLayout:
 					size_hint: (.15, .5)
@@ -96,8 +104,8 @@
 					size_hint: (.2, .4)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-				BoxLayout:
-					size_hint: (.15, .5)
+				# BoxLayout:
+				# 	size_hint: (.15, .5)
 			
 			BoxLayout:
 				#orientation: 'vertical'
@@ -305,6 +313,18 @@
 						# 	size_hint: (1,0.1)
 						# 	background_color:(1,0,0,1)
 
+					
+					ScrollView:
+
+						
+						Label:
+							color: (0, 1, 1, .5)
+							text: str('abracadabra ' * 1000)
+							text_size: self.width, None
+							size_hint_y: None
+							height: self.texture_size[1]
+					Button:
+						text: 'Drop'
 				
 				ScrollView:
 					
@@ -338,12 +358,13 @@
 		Label:
 		    size_hint_x: .2
 			text: 'Paste file link:'
-		ScrollView:
+		TextInput:
+			id: url
 			size_hint: (.5, 1)
-			TextInput:
 		Button:
 			size_hint_x: .1
 			text: 'Go'
+			on_press: root.send_file_name(*args) 
 
 
 <LocalFilePopup>:
@@ -352,4 +373,4 @@
 	size: (600, 600)
 	BoxLayout:
 		FileChooserIconView:
-			
+			on_selection: root.select(*args)
