@@ -6,6 +6,8 @@ from kivy.app import App
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty
+from kivy.properties import ObjectProperty
+from kivy.uix.checkbox import CheckBox
 
 import matplotlib
 matplotlib.use("module://kivy.garden.matplotlib.backend_kivy")
