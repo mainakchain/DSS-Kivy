@@ -81,8 +81,9 @@
 					size_hint: (.09, .5)
 
 				Label:
+					id: display_file_name
+					text: root.file_name
 					background_color: [105, 105, 105, 1]
-					text: 'default'
 					spacing: (20, 0)
 					size_hint: (.2, .4)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
@@ -144,12 +145,13 @@
 		Label:
 		    size_hint_x: .2
 			text: 'Paste file link:'
-		ScrollView:
+		TextInput:
+			id: url
 			size_hint: (.5, 1)
-			TextInput:
 		Button:
 			size_hint_x: .1
 			text: 'Go'
+			on_press: root.send_file_name(*args) 
 
 
 <LocalFilePopup>:
