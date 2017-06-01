@@ -17,9 +17,13 @@ class InternetPopup(Popup):
 
 
 class LocalFilePopup(Popup):
-	pass
+	def __init__(self, root, **kwargs):
+		super(LocalFilePopup, self).__init__(**kwargs)
+		self.root = root
 
-
+	def select(self, *args):
+		self.root.file_name = args[1][0]
+		self.dismiss()
 
 class RootWidget(TabbedPanel):
 
@@ -33,7 +37,8 @@ class RootWidget(TabbedPanel):
 		internet.open()
 
 	def local_file_popup(self, *args):
-		LocalFilePopup().open()
+		local = LocalFilePopup(self)
+		local.open()
 
 class DssApp(App):
     def build(self):
