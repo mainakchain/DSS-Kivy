@@ -1,3 +1,5 @@
+#:import Graph kivy.garden.graph.Graph
+#:import MeshLinePlot kivy.garden.graph.MeshLinePlot
 <RootWidget>:
 	do_default_tab: False
 	tab_width: self.size[0] / len(self.tab_list)
@@ -131,7 +133,77 @@
 	TabbedPanelItem:
 		id: tab_optimize
 		text: 'Optimize'
+		
+		BoxLayout:
+	        orientation: 'horizontal'
+	        
+		    BoxLayout:
+		        orientation: "vertical"
+		        BoxLayout:
+		            id: layout2
+		            spacing: 10
+		            padding: [5, 5, 5, 5]
 
+		            Label:
+		            	font_size: 20
+		                text: "Select Model:"
+		                size: self.texture_size
+		                color: (1,1,1,2)
+		    
+		        GridLayout:
+		            cols: 2
+		            canvas.before:
+		                Color:
+		                    rgb: 100/255., 149/255., 237/255.
+		                Rectangle:
+		                    pos: self.pos
+		                    size: self.size
+
+		            CheckBox:
+		                group: "models"
+		                color: [0,0,0,1] 
+		                on_active: root.optimize_SVM()   
+		            Label:
+		                text: "SVM"
+		                color: 0,0,0,1
+
+
+		            CheckBox:
+		                group: "models"
+		            Label
+		                text: "Random Forest"
+		                color: 0,0,0,1
+
+		            CheckBox:
+		                group: "models"
+		            Label
+		                text: "k-Nearest Neighbours " 
+		                color: 0,0,0,1
+
+		        BoxLayout:
+
+		        	Label:
+		        		text: "Parameters"
+		        		font_size: 20
+
+	        	BoxLayout:
+	        		Button:
+						text: 'GO!!'
+						font_size: 20
+						spacing: (20, 0)
+						size_hint: (.2, .4)
+						pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+						on_press: root.optimize()
+
+
+		    BoxLayout:
+		            
+	            padding: [5, 5, 5, 5]
+	            width: self.parent.width * 2
+	            height: self.parent.height
+	            Graph:
+	                id: graph_test
+	                plot: MeshLinePlot
 
 <InternetPopup>:
 	title: 'Choose File'
