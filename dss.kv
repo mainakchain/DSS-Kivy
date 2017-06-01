@@ -53,23 +53,20 @@
 					text: 'Local File'
 					size_hint: (.2, .4)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+					on_press: root.local_file_popup(*args)
 
 				BoxLayout:
 					size_hint: (.15, .5)
 			
-
 			BoxLayout:
 				id: layout
 				size_hint_y: None
 				spacing: 10
 				padding: [5, 5, 5, 5]
 
-
-				
 				BoxLayout:
 					size_hint: (.01, .5)
 
-		
 				Label:
 					text: 'File Dest.'
 					size: self.texture_size # for wrapping
@@ -153,3 +150,12 @@
 		Button:
 			size_hint_x: .1
 			text: 'Go'
+
+
+<LocalFilePopup>:
+	title: 'Choose File'
+	size_hint: (None, None)
+	size: (600, 600)
+	BoxLayout:
+		FileChooserIconView:
+			

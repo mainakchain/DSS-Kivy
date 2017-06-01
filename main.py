@@ -5,7 +5,13 @@ from kivy.uix.popup import Popup
 from kivy.properties import StringProperty
 
 class InternetPopup(Popup):
-	text = StringProperty()
+	pass
+
+
+
+class LocalFilePopup(Popup):
+	pass
+
 
 
 class RootWidget(TabbedPanel):
@@ -13,6 +19,8 @@ class RootWidget(TabbedPanel):
     def internet_popup(self, *args):
     	InternetPopup().open()
 
+    def local_file_popup(self, *args):
+    	LocalFilePopup().open()
 
 class DssApp(App):
     def build(self):
