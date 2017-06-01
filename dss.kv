@@ -81,7 +81,7 @@
 					size_hint: (.09, .5)
 
 				Label:
-					background_color: [105, 105, 105, 1]
+					#background_color: [1, 0, 0, 1]
 					text: 'default'
 					spacing: (20, 0)
 					size_hint: (.2, .4)
@@ -100,20 +100,211 @@
 					size_hint: (.15, .5)
 			
 			BoxLayout:
+				#orientation: 'vertical'
 				
 				BoxLayout:
 					orientation: 'vertical'
-					
-					ScrollView:
-						
-						Label:
-							color: (0, 1, 1, .5)
-							text: str('abracadabra ' * 1000)
-							text_size: self.width, None
-							size_hint_y: None
-							height: self.texture_size[1]
-					Button:
-						text: 'Drop'
+
+					BoxLayout:
+						orientation: 'vertical'
+						size_hint: (1,0.9)
+
+
+						BoxLayout:
+							size_hint: (1,0.1)
+
+							Label:
+								color: (1,0,0,1)
+								text:'S.No.'
+								halign: 'left'
+								valign: 'top'
+								size_hint:(0.2,1)
+								pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+							BoxLayout:
+								size_hint:(0.4,1)
+							
+							Label:
+								color: (1,0,0,1)
+								text:'Name'
+								halign: 'right'
+								valign: 'top'
+								size_hint:(0.4,1)
+								pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+						BoxLayout:
+							size_hint:(1,.2)
+
+
+						ScrollView:
+							
+							
+							GridLayout:
+								id: layout_content
+								height: self.minimum_height
+								cols: 3
+								size_hint_y: None
+								row_default_height: '50dp'
+                				# row_force_default: True
+				
+								Label:
+									color: (1,0,0,1)
+									text:'1'
+									halign: 'left'
+									valign: 'top'
+									size_hint:(0.2,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								BoxLayout:
+									size_hint: (0.4, 1)
+
+								Label:
+									color: (1,0,0,1)
+									text:'Name'
+									halign: 'right'
+									valign: 'top'
+									size_hint:(0.4,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+										
+									
+
+								
+								Label:
+									color: (1,0,0,1)
+									text:'2'
+									halign: 'left'
+									valign: 'top'
+									size_hint:(0.2,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								BoxLayout:
+									size_hint:(0.4,1)
+								
+								Label:
+									color: (1,0,0,1)
+									text:'Name'
+									halign: 'right'
+									valign: 'top'
+									size_hint:(0.4,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+	
+								Label:
+									color: (1,0,0,1)
+									text:'3'
+									halign: 'left'
+									valign: 'top'
+									size_hint:(0.2,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								BoxLayout:
+									size_hint:(0.4,1)
+								
+								Label:
+									color: (1,0,0,1)
+									text:'Name'
+									halign: 'right'
+									valign: 'top'
+									size_hint:(0.4,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+	
+								Label:
+									color: (1,0,0,1)
+									text:'4'
+									halign: 'left'
+									valign: 'top'
+									size_hint:(0.2,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								BoxLayout:
+									size_hint:(0.4,1)
+								
+								Label:
+									color: (1,0,0,1)
+									text:'Name'
+									halign: 'right'
+									valign: 'top'
+									size_hint:(0.4,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								Label:
+									color: (1,0,0,1)
+									text:'5'
+									halign: 'left'
+									valign: 'top'
+									size_hint:(0.2,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								BoxLayout:
+									size_hint:(0.4,1)
+								
+								Label:
+									color: (1,0,0,1)
+									text:'Name'
+									halign: 'right'
+									valign: 'top'
+									size_hint:(0.4,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								Label:
+									color: (1,0,0,1)
+									text:'1'
+									halign: 'left'
+									valign: 'top'
+									size_hint:(0.2,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								BoxLayout:
+									size_hint: (0.4, 1)
+
+								Label:
+									color: (1,0,0,1)
+									text:'Name'
+									halign: 'right'
+									valign: 'top'
+									size_hint:(0.4,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								Label:
+									color: (1,0,0,1)
+									text:'1'
+									halign: 'left'
+									valign: 'top'
+									size_hint:(0.2,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+								BoxLayout:
+									size_hint: (0.4, 1)
+
+								Label:
+									color: (1,0,0,1)
+									text:'Name'
+									halign: 'right'
+									valign: 'top'
+									size_hint:(0.4,1)
+									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+
+					BoxLayout:
+						orientation: 'vertical'
+						size_hint: (1,0.2)
+
+						BoxLayout:
+							size_hint: (0.8,1)
+
+						Button:
+							text: 'Drop'
+							halign: 'right'
+							valign: 'bottom'
+							size_hint: (0.2,1)
+
+
+
+
+
+						# TextInput:
+						# 	size_hint: (1,0.1)
+						# 	background_color:(1,0,0,1)
+
 				
 				ScrollView:
 					
@@ -123,6 +314,9 @@
 						text_size: self.width, None
 						size_hint_y: None
 						height: self.texture_size[1]
+
+			
+
 	
 	TabbedPanelItem:
 		id: tab_predict
