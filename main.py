@@ -53,16 +53,16 @@ class RootWidget(TabbedPanel):
 		local = LocalFilePopup(self)
 		local.open()
 
-    def optimize_SVM(self):
+	def optimize_SVM(self):
         # v_svm_c = StringProperty('')
         # v_svm_kernel = StringProperty('')
         # v_svm_degree = StringProperty('')
         # v_svm_gamma = StringProperty('')
         # v_svm_coef0 = StringProperty('')
         # v_svm_tol = StringProperty('')
-        pass
-    def optimize(self):
-    	pass
+		pass
+	def optimize(self):
+		pass
 
 
 class DssApp(App):
