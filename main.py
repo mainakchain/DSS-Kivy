@@ -50,7 +50,12 @@ class RootWidget(TabbedPanel):
 		super(RootWidget, self).__init__(**kwargs)
 
 	def import_dataset(self):
-		self.data = pd.read_csv(self.file_name)
+
+		if self.file_name.endswith('zip'):
+			# zf = zipfile.ZipFile(self.file_name)
+			self.data = pd.read_csv(self.file_name, compression='zip', sep=',', quotechar='"')
+		else:
+			self.data = pd.read_csv(self.file_name)
 		self.column_names = list(self.data)
 		print self.column_names
 		# self.display_drop_section()
