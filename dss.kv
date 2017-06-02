@@ -111,7 +111,7 @@
 				# 	size_hint: (.15, .5)
 			
 			BoxLayout:
-				#orientation: 'vertical'
+				size_hint: (1,0.8)
 				
 				BoxLayout:
 					orientation: 'vertical'
@@ -296,17 +296,18 @@
 
 
 					BoxLayout:
-						orientation: 'vertical'
-						size_hint: (1,0.2)
+						size_hint: (1,0.1)
 
 						BoxLayout:
-							size_hint: (0.8,1)
+							size_hint: (0.35,1)
+							
 
 						Button:
 							text: 'Drop'
-							halign: 'right'
-							valign: 'bottom'
-							size_hint: (0.2,1)
+							size_hint: (0.3, 1)
+							# pos_hint: {'left': 0.5 + self.size_hint[0]/2}
+						BoxLayout:
+							size_hint: (0.35, 1)
 
 
 
@@ -326,6 +327,33 @@
 						text_size: self.width, None
 						size_hint_y: None
 						height: self.texture_size[1]
+			
+			BoxLayout:
+				size_hint: (1, 0.1)
+			
+			BoxLayout:
+				size_hint: (1, 0.1)
+
+				Label:
+					text: 'Status:'
+					size_hint: (0.1,0.5)
+					pos_hint:{'top': 0.5 + self.size_hint[1]/2}
+					color: (0, 0, 0, 1)
+					valign: 'top'
+
+				BoxLayout:
+					size_hint:(0.3,1)
+				Label:
+					text: 'Welcome to DSS'
+					size_hint: (0.2,0.5)
+					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+					color: (0, 1, 1, .5)
+					valign: 'top'
+
+				BoxLayout:
+					size_hint: (0.4,1)
+
+
 
 			
 
