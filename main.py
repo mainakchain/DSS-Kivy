@@ -45,33 +45,45 @@ class RootWidget(TabbedPanel):
 
 	file_name = StringProperty('None')
 	big_dict = DictProperty()
+	empty_big_dict = DictProperty()
 	
 	def __init__(self, **kwargs):
 		super(RootWidget, self).__init__(**kwargs)
 
+	def ping(self, *args):
+		# self.big_dict[column] = value
+		print args[0]
+		print args[1]
+		self.big_dict[args[0]][1] = args[1]
+		print self.big_dict[args[0]][0]
+
 	def import_dataset(self):
 		self.data = pd.read_csv(self.file_name)
 		self.column_names = list(self.data)
-		print self.column_names
+		# print self.column_names
 		# self.display_drop_section()
+		self.ids.display_info.text = str(self.data.describe())
+		self.ids.update_status.text ='Dataset imported successfully!'
+		print type(self.data.head())
 		for sl, column in enumerate(self.column_names):
 			label = Label(text=str(sl+1), size_hint=(0.2,1), pos_hint={'top': 0.5 + self.size_hint[1]/2})
 			checkbox = CheckBox(text=column)
+			checkbox.bind(active=self.ping)
 			space = BoxLayout(size_hint=(0.4, 1)) 
 			layout = self.ids.layout_content
 			name = Label(text=column)
+			self.big_dict[checkbox] = [column, False]
 			layout.add_widget(label)
 			layout.add_widget(space)
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
 
-	def ping(self, column, value):
-		self.big_dict[column] = value
 
 	def display_drop_section(self):
 		for sl, column in enumerate(self.column_names):
 			label = Label(text=str(sl+1), size_hint=(0.2,1), pos_hint={'top': 0.5 + self.size_hint[1]/2})
-			checkbox = CheckBox(text=column, on_active=self.ping(column, 1))
+			checkbox = CheckBox(text=column)
+			checkbox.bind(active=self.ping)
 			space = BoxLayout(size_hint=(0.4, 1)) 
 			print 'done'
 			layout = self.ids.layout_content
@@ -83,14 +95,20 @@ class RootWidget(TabbedPanel):
 
 
 	def drop_columns(self, *args):
-		for column in self.big_dict.keys():
-			if self.big_dict[column]:
-				self.data.drop(column, axis=1)
-				self.column_names.remove(column)
+		self.ids.update_status.text ='Columns dropped successfully!'
+
+		for checkbox in self.big_dict:
+			if self.big_dict[checkbox][1]:
+				self.data.drop(self.big_dict[checkbox][0], axis=1)
+				self.column_names.remove(self.big_dict[checkbox][0])
 		# self.display_drop_section()
+		self.ids.layout_content.clear_widgets()
+		self.big_dict = self.empty_big_dict
 		for sl, column in enumerate(self.column_names):
 			label = Label(text=str(sl+1), size_hint=(0.2,1), pos_hint={'top': 0.5 + self.size_hint[1]/2})
-			checkbox = CheckBox(text=column, on_active=self.ping(column, 1))
+			checkbox = CheckBox(text=column)
+			checkbox.bind(active=self.ping)
+			self.big_dict[checkbox] = [column, False]
 			space = BoxLayout(size_hint=(0.4, 1)) 
 			layout = self.ids.layout_content
 			name = Label(text=column)
@@ -98,6 +116,8 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(space)
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
+		print self.column_names
+		self.ids.display_info.text = str(self.data.describe())
 
 	def internet_popup(self, *args):
 		internet = InternetPopup(self)
