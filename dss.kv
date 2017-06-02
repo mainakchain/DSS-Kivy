@@ -105,6 +105,7 @@
 					text: 'Import'	
 					size_hint: (.2, .4)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+					on_press: root.import_dataset()
 
 				# BoxLayout:
 				# 	size_hint: (.15, .5)
@@ -152,146 +153,146 @@
 							GridLayout:
 								id: layout_content
 								height: self.minimum_height
-								cols: 3
+								cols: 4
 								size_hint_y: None
 								row_default_height: '50dp'
                 				# row_force_default: True
 				
-								Label:
-									color: (1,0,0,1)
-									text:'1'
-									halign: 'left'
-									valign: 'top'
-									size_hint:(0.2,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'1'
+								# 	halign: 'left'
+								# 	valign: 'top'
+								# 	size_hint:(0.2,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								BoxLayout:
-									size_hint: (0.4, 1)
+								# BoxLayout:
+								# 	size_hint: (0.4, 1)
 
-								Label:
-									color: (1,0,0,1)
-									text:'Name'
-									halign: 'right'
-									valign: 'top'
-									size_hint:(0.4,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'Name'
+								# 	halign: 'right'
+								# 	valign: 'top'
+								# 	size_hint:(0.4,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 										
 									
 
 								
-								Label:
-									color: (1,0,0,1)
-									text:'2'
-									halign: 'left'
-									valign: 'top'
-									size_hint:(0.2,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'2'
+								# 	halign: 'left'
+								# 	valign: 'top'
+								# 	size_hint:(0.2,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								BoxLayout:
-									size_hint:(0.4,1)
+								# BoxLayout:
+								# 	size_hint:(0.4,1)
 								
-								Label:
-									color: (1,0,0,1)
-									text:'Name'
-									halign: 'right'
-									valign: 'top'
-									size_hint:(0.4,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'Name'
+								# 	halign: 'right'
+								# 	valign: 'top'
+								# 	size_hint:(0.4,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 	
-								Label:
-									color: (1,0,0,1)
-									text:'3'
-									halign: 'left'
-									valign: 'top'
-									size_hint:(0.2,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'3'
+								# 	halign: 'left'
+								# 	valign: 'top'
+								# 	size_hint:(0.2,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								BoxLayout:
-									size_hint:(0.4,1)
+								# BoxLayout:
+								# 	size_hint:(0.4,1)
 								
-								Label:
-									color: (1,0,0,1)
-									text:'Name'
-									halign: 'right'
-									valign: 'top'
-									size_hint:(0.4,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'Name'
+								# 	halign: 'right'
+								# 	valign: 'top'
+								# 	size_hint:(0.4,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 	
-								Label:
-									color: (1,0,0,1)
-									text:'4'
-									halign: 'left'
-									valign: 'top'
-									size_hint:(0.2,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'4'
+								# 	halign: 'left'
+								# 	valign: 'top'
+								# 	size_hint:(0.2,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								BoxLayout:
-									size_hint:(0.4,1)
+								# BoxLayout:
+								# 	size_hint:(0.4,1)
 								
-								Label:
-									color: (1,0,0,1)
-									text:'Name'
-									halign: 'right'
-									valign: 'top'
-									size_hint:(0.4,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'Name'
+								# 	halign: 'right'
+								# 	valign: 'top'
+								# 	size_hint:(0.4,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								Label:
-									color: (1,0,0,1)
-									text:'5'
-									halign: 'left'
-									valign: 'top'
-									size_hint:(0.2,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'5'
+								# 	halign: 'left'
+								# 	valign: 'top'
+								# 	size_hint:(0.2,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								BoxLayout:
-									size_hint:(0.4,1)
+								# BoxLayout:
+								# 	size_hint:(0.4,1)
 								
-								Label:
-									color: (1,0,0,1)
-									text:'Name'
-									halign: 'right'
-									valign: 'top'
-									size_hint:(0.4,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'Name'
+								# 	halign: 'right'
+								# 	valign: 'top'
+								# 	size_hint:(0.4,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								Label:
-									color: (1,0,0,1)
-									text:'1'
-									halign: 'left'
-									valign: 'top'
-									size_hint:(0.2,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'1'
+								# 	halign: 'left'
+								# 	valign: 'top'
+								# 	size_hint:(0.2,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								BoxLayout:
-									size_hint: (0.4, 1)
+								# BoxLayout:
+								# 	size_hint: (0.4, 1)
 
-								Label:
-									color: (1,0,0,1)
-									text:'Name'
-									halign: 'right'
-									valign: 'top'
-									size_hint:(0.4,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'Name'
+								# 	halign: 'right'
+								# 	valign: 'top'
+								# 	size_hint:(0.4,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								Label:
-									color: (1,0,0,1)
-									text:'1'
-									halign: 'left'
-									valign: 'top'
-									size_hint:(0.2,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'1'
+								# 	halign: 'left'
+								# 	valign: 'top'
+								# 	size_hint:(0.2,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-								BoxLayout:
-									size_hint: (0.4, 1)
+								# BoxLayout:
+								# 	size_hint: (0.4, 1)
 
-								Label:
-									color: (1,0,0,1)
-									text:'Name'
-									halign: 'right'
-									valign: 'top'
-									size_hint:(0.4,1)
-									pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								# Label:
+								# 	color: (1,0,0,1)
+								# 	text:'Name'
+								# 	halign: 'right'
+								# 	valign: 'top'
+								# 	size_hint:(0.4,1)
+								# 	pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
 
 					BoxLayout:
