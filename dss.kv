@@ -305,6 +305,7 @@
 						Button:
 							text: 'Drop'
 							size_hint: (0.3, 1)
+							on_press: root.drop_columns(*args)
 							# pos_hint: {'left': 0.5 + self.size_hint[0]/2}
 						BoxLayout:
 							size_hint: (0.35, 1)

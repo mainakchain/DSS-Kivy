@@ -8,7 +8,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty
-from kivy.properties import ObjectProperty
+from kivy.properties import DictProperty
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label
 
@@ -44,6 +44,8 @@ class LocalFilePopup(Popup):
 class RootWidget(TabbedPanel):
 
 	file_name = StringProperty('None')
+	big_dict = DictProperty()
+	
 	def __init__(self, **kwargs):
 		super(RootWidget, self).__init__(**kwargs)
 
@@ -51,10 +53,44 @@ class RootWidget(TabbedPanel):
 		self.data = pd.read_csv(self.file_name)
 		self.column_names = list(self.data)
 		print self.column_names
-
+		# self.display_drop_section()
 		for sl, column in enumerate(self.column_names):
 			label = Label(text=str(sl+1), size_hint=(0.2,1), pos_hint={'top': 0.5 + self.size_hint[1]/2})
 			checkbox = CheckBox(text=column)
+			space = BoxLayout(size_hint=(0.4, 1)) 
+			layout = self.ids.layout_content
+			name = Label(text=column)
+			layout.add_widget(label)
+			layout.add_widget(space)
+			layout.add_widget(checkbox)
+			layout.add_widget(name)
+
+	def ping(self, column, value):
+		self.big_dict[column] = value
+
+	def display_drop_section(self):
+		for sl, column in enumerate(self.column_names):
+			label = Label(text=str(sl+1), size_hint=(0.2,1), pos_hint={'top': 0.5 + self.size_hint[1]/2})
+			checkbox = CheckBox(text=column, on_active=self.ping(column, 1))
+			space = BoxLayout(size_hint=(0.4, 1)) 
+			print 'done'
+			layout = self.ids.layout_content
+			name = Label(text=column)
+			layout.add_widget(label)
+			layout.add_widget(space)
+			layout.add_widget(checkbox)
+			layout.add_widget(name)
+
+
+	def drop_columns(self, *args):
+		for column in self.big_dict.keys():
+			if self.big_dict[column]:
+				self.data.drop(column, axis=1)
+				self.column_names.remove(column)
+		# self.display_drop_section()
+		for sl, column in enumerate(self.column_names):
+			label = Label(text=str(sl+1), size_hint=(0.2,1), pos_hint={'top': 0.5 + self.size_hint[1]/2})
+			checkbox = CheckBox(text=column, on_active=self.ping(column, 1))
 			space = BoxLayout(size_hint=(0.4, 1)) 
 			layout = self.ids.layout_content
 			name = Label(text=column)
