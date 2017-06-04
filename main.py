@@ -13,10 +13,11 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label
 
 import matplotlib
-matplotlib.use("module://kivy.garden.matplotlib.backend_kivy")
-from kivy.garden.matplotlib import FigureCanvasKivyAgg
+matplotlib.use("module://kivy.garden.matplotlib.backend_kivyagg")
+from kivy.garden.matplotlib import FigureCanvasKivy, FigureCanvasKivyAgg
 
-from kivy.garden.graph import Graph, MeshLinePlot
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 
 class InternetPopup(Popup):
@@ -46,9 +47,11 @@ class RootWidget(TabbedPanel):
 	file_name = StringProperty('None')
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
+	data =''
 	
 	def __init__(self, **kwargs):
 		super(RootWidget, self).__init__(**kwargs)
+
 
 	def ping(self, *args):
 		# self.big_dict[column] = value
@@ -67,9 +70,11 @@ class RootWidget(TabbedPanel):
 		self.column_names = list(self.data)
 		# print self.column_names
 		# self.display_drop_section()
+		self.ids.layout_content.clear_widgets()
 		self.ids.display_info.text = str(self.data.describe())
 		self.ids.update_status.text ='Dataset imported successfully!'
 		print type(self.data.head())
+		
 		for sl, column in enumerate(self.column_names):
 			label = Label(text=str(sl+1), size_hint=(0.2,1), pos_hint={'top': 0.5 + self.size_hint[1]/2})
 			checkbox = CheckBox(text=column)
@@ -98,8 +103,18 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
 
+	def optimize(self, *args):
+		graph_display = self.ids.graph_display
+		sns.set_palette('colorblind')
+		sns.countplot(data=self.data, x="survived", hue="pclass")
+		print plt.gcf().axes
+		graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+		print "done"
+
+
 
 	def drop_columns(self, *args):
+
 		self.ids.update_status.text ='Columns dropped successfully!'
 
 		for checkbox in self.big_dict:
@@ -121,7 +136,7 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(space)
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
-		print self.column_names
+
 		self.ids.display_info.text = str(self.data.describe())
 
 	def internet_popup(self, *args):
@@ -132,16 +147,13 @@ class RootWidget(TabbedPanel):
 		local = LocalFilePopup(self)
 		local.open()
 
-	def optimize_SVM(self):
-        # v_svm_c = StringProperty('')
-        # v_svm_kernel = StringProperty('')
-        # v_svm_degree = StringProperty('')
-        # v_svm_gamma = StringProperty('')
-        # v_svm_coef0 = StringProperty('')
-        # v_svm_tol = StringProperty('')
+	def optimize_SVM(self, args):
+
 		pass
-	def optimize(self):
-		pass
+		
+
+	
+
 
 
 class DssApp(App):

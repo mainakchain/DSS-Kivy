@@ -1,5 +1,6 @@
 #:import Graph kivy.garden.graph.Graph
 #:import MeshLinePlot kivy.garden.graph.MeshLinePlot
+
 <RootWidget>:
 	do_default_tab: False
 	tab_width: self.size[0] / len(self.tab_list)
@@ -261,7 +262,7 @@
 		            CheckBox:
 		                group: "models"
 		                color: [0,0,0,1] 
-		                on_active: root.optimize_SVM()   
+		                on_active: root.optimize_SVM(*args)   
 		            Label:
 		                text: "SVM"
 		                color: 0,0,0,1
@@ -292,17 +293,15 @@
 						spacing: (20, 0)
 						size_hint: (.2, .4)
 						pos_hint: {'top': 0.5 + self.size_hint[1]/2}
-						on_press: root.optimize()
+						on_press: root.optimize(*args)
 
 
 		    BoxLayout:
-		            
+		        id: graph_display
 	            padding: [5, 5, 5, 5]
 	            width: self.parent.width * 2
 	            height: self.parent.height
-	            Graph:
-	                id: graph_test
-	                plot: MeshLinePlot
+	            
 
 <InternetPopup>:
 	title: 'Choose File'
