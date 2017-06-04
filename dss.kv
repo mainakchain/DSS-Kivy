@@ -229,6 +229,122 @@
 		id: tab_predict
 		text: 'Predict'
 
+		BoxLayout:
+			orientation: 'vertical'
+
+			BoxLayout:
+				orientation: 'horizontal'
+				size_hint: (1,.2)
+
+				Label:
+					text: 'Select Model'
+					size_hint: (0.2,1)
+					color: (0,1,1,2)
+
+				BoxLayout:
+					id: layout_predict_model
+					orientation: 'horizontal'
+					# cols: 6
+					canvas.before:
+						Color:
+							rgb: 100/255., 149/255., 237/255.
+						Rectangle:
+							pos: self.pos
+							size: self.size
+
+					CheckBox:
+		                group: "predict_models"
+		                color: [0,0,0,1]   
+		            Label:
+		                text: "SVM"
+		                color: 0,0,0,1
+
+		            CheckBox:
+		                group: "predict_models"
+		            Label
+		                text: "Random Forest"
+		                color: 0,0,0,1
+
+		            CheckBox:
+		                group: "predict_models"
+		            Label
+		                text: "k-Nearest Neighbours " 
+		                color: 0,0,0,1
+
+		    BoxLayout:
+		    	orientation: 'horizontal'
+		    	size_hint: (1,.2)
+
+		    	Label:
+		    		text: 'Select Predict \n Parameter'
+		    		color: (0,1,1,2)
+		    		size_hint: (0.2,1)
+
+		    	BoxLayout:
+		    		id: layout_dropdown
+
+					# canvas.before:
+					# 	Color:
+					# 		rgb: 201/255., 203/255., 133/255.
+					# 	Rectangle:
+					# 		pos: self.pos
+					# 		size: self.size
+
+					BoxLayout:
+
+
+					Button:
+						id: predict_mainbutton
+						text: 'Press'
+						size_hint: (1,.5)
+						on_press: root.dropDown(*args) 
+						pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+					BoxLayout:
+
+
+			BoxLayout:
+				orientation: 'horizontal'
+
+				BoxLayout:
+					canvas.before:
+						Color:
+							rgb: 140/255., 203/255., 133/255.
+						Rectangle:
+							pos: self.pos
+							size: self.size			
+
+					Label:
+						text: 'Set Parameters'
+						font_size: 20
+
+				Graph:
+					id: predict_graph
+
+			BoxLayout:
+				orientation: 'vertical'
+				size_hint: (1,.2)
+
+				BoxLayout:
+
+					BoxLayout:
+						size_hint: (2, 1)
+
+					Button:
+						text: 'Predict'
+						font_size: 15
+						
+
+					BoxLayout:
+						size_hint: (.3, 1)
+
+				Label:
+					id: predict_status
+					text: 'Happy Prediction :)!!!'
+
+
+
+
 	TabbedPanelItem:
 		id: tab_optimize
 		text: 'Optimize'

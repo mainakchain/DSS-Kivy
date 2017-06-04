@@ -8,9 +8,14 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty
+from kivy.properties import ListProperty
 from kivy.properties import DictProperty
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.dropdown import DropDown
+from kivy.core.window import Window
+Window.clearcolor = (78/255., 208/255., 155/255., 1)
 
 import matplotlib
 matplotlib.use("module://kivy.garden.matplotlib.backend_kivy")
@@ -46,10 +51,11 @@ class RootWidget(TabbedPanel):
 	file_name = StringProperty('None')
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
+	column_name = ListProperty('None')
 	
 	def __init__(self, **kwargs):
 		super(RootWidget, self).__init__(**kwargs)
-
+		
 	def ping(self, *args):
 		# self.big_dict[column] = value
 		print args[0]
@@ -116,8 +122,20 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(space)
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
-		print self.column_names
+		self.column_name = self.column_names
 		self.ids.display_info.text = str(self.data.describe())
+
+	def dropDown(self, *args):
+		dropdown = DropDown()
+		for names in self.column_name:
+			btn = Button(text=names, size_hint_y=None, height=44)
+			btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+			dropdown.add_widget(btn)
+		mainbutton=self.ids.predict_mainbutton
+		mainbutton.bind(on_release=dropdown.open)
+		dropdown.bind(on_select=lambda instance, x: setattr(mainbutton, 'text', x))
+		layout = self.ids.layout_dropdown
+
 
 	def internet_popup(self, *args):
 		internet = InternetPopup(self)
