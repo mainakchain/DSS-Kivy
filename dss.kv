@@ -483,20 +483,39 @@
 
 
 
-	   #      BoxLayout:
-	   #      	orientation:'horizontal'
-	   #      	size_hint:(1,0.15)
-    #     		Button:
-				# 	text: 'GO!!'
-				# 	font_size: 20
-				# 	size_hint: (1, .3)
-				# 	on_press: root.optimize(*args)
+	        BoxLayout:
+	        	orientation:'horizontal'
+	        	size_hint:(1,0.15)
+        		
+        		Button:
+					text: 'Plot'
+					font_size: 20
+					size_hint: (1, .3)
+					on_press: root.draw_graph(*args)
 
-		    # BoxLayout:
-		    #     id: graph_display
-	     #        padding: [5, 5, 5, 5]
-	     #        width: self.parent.width * 2
-	     #        height: self.parent.height
+				Button:
+					text: 'X'
+					font_size: 20
+					size_hint: (1, .3)
+					
+
+				Button:
+					text: 'Y'
+					font_size: 20
+					size_hint: (1, .3)
+					
+
+				Button:
+					text: 'Type'
+					font_size: 20
+					size_hint: (1, .3)
+					
+
+		    BoxLayout:
+		        id: graph_display
+	            padding: [5, 5, 5, 5]
+	            width: self.parent.width * 2
+	            height: self.parent.height
 	            
 
 <InternetPopup>:

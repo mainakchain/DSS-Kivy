@@ -112,7 +112,7 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
 
-	def optimize(self, *args):
+	def draw_graph(self, *args):
 		graph_display = self.ids.graph_display
 		sns.set_palette('colorblind')
 		sns.countplot(data=self.data, x="survived", hue="pclass")
