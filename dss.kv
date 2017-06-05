@@ -294,12 +294,15 @@
 					BoxLayout:
 
 
-					Button:
-						id: predict_mainbutton
-						text: 'Press'
-						size_hint: (1,.5)
-						on_press: root.dropDown(*args) 
-						pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+					BoxLayout:
+						id: layout_dropdown
+
+						Button:
+							id: predict_mainbutton
+							text: 'Press'
+							size_hint: (1,.5)
+							on_press: root.dropDown( root.column_name, predict_mainbutton, *args) 
+							pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
 					BoxLayout:
 
@@ -319,8 +322,11 @@
 						text: 'Set Parameters'
 						font_size: 20
 
-				Graph:
+				BoxLayout:
 					id: predict_graph
+					padding: (10,10,10,10)
+
+
 
 			BoxLayout:
 				orientation: 'vertical'
@@ -349,74 +355,148 @@
 	TabbedPanelItem:
 		id: tab_optimize
 		text: 'Optimize'
-		
+
 		BoxLayout:
-	        orientation: 'horizontal'
-	        
-		    BoxLayout:
-		        orientation: "vertical"
-		        BoxLayout:
-		            id: layout2
-		            spacing: 10
-		            padding: [5, 5, 5, 5]
+			orientation: 'vertical'
+			size_hint:(0.5,1)
+			BoxLayout:
+				orientation: 'vertical'
+				size_hint:(1,0.25)
+				BoxLayout:
+					orientation: 'vertical'
+					size_hint:(1,0.25)
+					Label:
+			        	#font_size: 20
+			            text: "Select Model:"
+			            size: self.texture_size
+			            color: (1,1,1,2)
+				BoxLayout:
+					orientation: 'horizontal'
+					size_hint:(1,0.25)
+					CheckBox:
+			            group: "models"
+			            color: (0,.5,1,1) 
+			            on_active: root.optimize_parameters(1, *args)   
+			        Label:
+			            text: "SVM"
+			            color: 0,0,0,1
+				BoxLayout:
+					orientation: 'horizontal'
+					size_hint:(1,0.25)
+					CheckBox:
+			            group: "models"
+			            color: (0,.5,1,1)
+			            on_active: root.optimize_parameters(2, *args)
+			        Label
+			            text: "Random Forest"
+			            color: 0,0,0,1
+				BoxLayout:
+					orientation: 'horizontal'
+					size_hint:(1,0.25)
+					CheckBox:
+			            group: "models"
+			            color: (0,.5,1,1)
+			            on_active: root.optimize_parameters(3, *args)
+			        Label
+			            text: "k-Nearest\nNeighbours " 
+			            color: 0,0,0,1
 
-		            Label:
-		            	font_size: 20
-		                text: "Select Model:"
-		                size: self.texture_size
-		                color: (1,1,1,2)
-		    
-		        GridLayout:
-		            cols: 2
-		            canvas.before:
-		                Color:
-		                    rgb: 100/255., 149/255., 237/255.
-		                Rectangle:
-		                    pos: self.pos
-		                    size: self.size
+			BoxLayout:
+	        	orientation: 'vertical'
+	        	size_hint:(1,0.7)
+				Label:
+	        		text: "Parameters"
+	        		font_size: 20
+	        		pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-		            CheckBox:
-		                group: "models"
-		                color: [0,0,0,1] 
-		                on_active: root.optimize_SVM(*args)   
-		            Label:
-		                text: "SVM"
-		                color: 0,0,0,1
-
-
-		            CheckBox:
-		                group: "models"
-		            Label
-		                text: "Random Forest"
-		                color: 0,0,0,1
-
-		            CheckBox:
-		                group: "models"
-		            Label
-		                text: "k-Nearest Neighbours " 
-		                color: 0,0,0,1
-
-		        BoxLayout:
-
-		        	Label:
-		        		text: "Parameters"
-		        		font_size: 20
+	        	GridLayout:
+	        		id: layout_optimize_parameters
+	        		cols: 3
+				
+			BoxLayout:
+				size_hint:(1,0.05)
+				BoxLayout:
+					size_hint:(0.25,1)
+				BoxLayout:
+					size_hint:(0.2,1)
+					Button:
+						text:'Go!'
+						# pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
 	        	BoxLayout:
-	        		Button:
-						text: 'GO!!'
-						font_size: 20
-						spacing: (20, 0)
-						size_hint: (.2, .4)
-						pos_hint: {'top': 0.5 + self.size_hint[1]/2}
-						on_press: root.optimize(*args)
+	        		size_hint:(0.55,1)
+	        
+		  #   BoxLayout:
+		  #       orientation: "horizontal"
+		  #       BoxLayout:
+		  #           id: layout2
+		  #           size_hint: (1,.3)
+		  #           Label:
+		  #           	font_size: 20
+		  #               text: "Select Model:"
+		  #               size: self.texture_size
+		  #               color: (1,1,1,2)
+
+		  #           BoxLayout:
+		  #           	size_hint:(1,0.33)
+		            	# CheckBox:
+			            #     group: "models"
+			            #     color: (0,.5,1,1) 
+			            #     on_active: root.optimize_parameters(1, *args)   
+			            # Label:
+			            #     text: "SVM"
+			            #     color: 0,0,0,1
+
+			 #        BoxLayout:
+			 #        	size_hint:(1,0.33)
+			 #            CheckBox:
+			 #                group: "models"
+			 #                color: (0,.5,1,1)
+			 #                on_active: root.optimize_parameters(2, *args)
+			 #            Label
+			 #                text: "Random Forest"
+			 #                color: 0,0,0,1
+
+			 #        BoxLayout:
+			 #        	size_hint:(1,0.33)
+			            # CheckBox:
+			            #     group: "models"
+			            #     color: (0,.5,1,1)
+			            #     on_active: root.optimize_parameters(3, *args)
+			            # Label
+			            #     text: "k-Nearest\nNeighbours " 
+			            #     color: 0,0,0,1
+		    
+		  #       # GridLayout:
+		  #       #     cols: 2
+		  #       #     height: self.minimum_height
+		  #       #     # orientation: 'horizontal'
+		  #       #     canvas.before:
+		  #       #         Color:
+		  #       #             rgb: 100/255., 149/255., 237/255.
+		  #       #         Rectangle:
+		  #       #             pos: self.pos
+		  #       #             size: self.size
+
+		           
 
 
-		    BoxLayout:
-		        id: graph_display
-	            padding: [5, 5, 5, 5]
-	            width: self.parent.width * 2
-	            height: self.parent.height
+
+
+	   #      BoxLayout:
+	   #      	orientation:'horizontal'
+	   #      	size_hint:(1,0.15)
+    #     		Button:
+				# 	text: 'GO!!'
+				# 	font_size: 20
+				# 	size_hint: (1, .3)
+				# 	on_press: root.optimize(*args)
+
+		    # BoxLayout:
+		    #     id: graph_display
+	     #        padding: [5, 5, 5, 5]
+	     #        width: self.parent.width * 2
+	     #        height: self.parent.height
 	            
 
 <InternetPopup>:
