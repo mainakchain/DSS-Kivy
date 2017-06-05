@@ -56,7 +56,7 @@ class RootWidget(TabbedPanel):
 	file_name = StringProperty('None')
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
-	column_name = ListProperty('None')
+	column_names = ''
 	value = NumericProperty()
 	
 	def __init__(self, **kwargs):
@@ -134,7 +134,6 @@ class RootWidget(TabbedPanel):
 	def drop_columns(self, *args):
 
 		self.ids.update_status.text ='Columns dropped successfully!'
-
 		for checkbox in self.big_dict:
 			if self.big_dict[checkbox][1]:
 				self.data.drop(self.big_dict[checkbox][0], axis=1)
@@ -158,14 +157,17 @@ class RootWidget(TabbedPanel):
 		self.column_name = self.column_names
 		self.ids.display_info.text = str(self.data.describe())
 
-	def dropDown(self, lists, ID, *args):				#ID will be mainbutton id
+	def dropDown(self, lists, *args):				#ID will be mainbutton id
 		dropdown = DropDown()
+		print args[0]
+		print lists
 		for names in lists:
+			print names
 			btn = Button(text=names, size_hint_y=None, height=25)
 			btn.bind(on_release=lambda btn: dropdown.select(btn.text))
 			dropdown.add_widget(btn)
-		ID.bind(on_release=dropdown.open)
-		dropdown.bind(on_select=lambda instance, x: setattr(ID ,'text', x))
+		args[0].bind(on_release=dropdown.open)
+		dropdown.bind(on_select=lambda instance, x: setattr(args[0] ,'text', x))
 		# scroll = ScrollView(size_hint=(1, None), do_scroll_y=True, do_scroll_x=False)
 		# scroll.add_widget(self.ids.layout_dropdown)
 
@@ -177,7 +179,7 @@ class RootWidget(TabbedPanel):
 		local = LocalFilePopup(self)
 		local.open()
 
-	def optimize_parameters(self, value, *args):
+	def optimize_parameters(self, value):
 		layout = self.ids.layout_optimize_parameters
 
 		if value==1:
@@ -228,8 +230,7 @@ class RootWidget(TabbedPanel):
 
 			kernel_label = Label(text = 'kernel')
 			kernel_mainbutton = Button(text='Choose kernel')
-			main_btn = ObjectProperty(kernel_mainbutton)
-			kernel_mainbutton.bind(on_press=self.dropDown)
+			kernel_mainbutton.bind(on_press=lambda x:self.dropDown(self.column_names, kernel_mainbutton))
 			layout.add_widget(kernel_label)
 			layout.add_widget(kernel_mainbutton)
 

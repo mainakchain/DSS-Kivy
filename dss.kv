@@ -301,7 +301,7 @@
 							id: predict_mainbutton
 							text: 'Press'
 							size_hint: (1,.5)
-							on_press: root.dropDown( root.column_name, predict_mainbutton, *args) 
+							on_press: root.dropDown( root.column_names, *args) 
 							pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
 					BoxLayout:
@@ -376,7 +376,7 @@
 					CheckBox:
 			            group: "models"
 			            color: (0,.5,1,1) 
-			            on_active: root.optimize_parameters(1, *args)   
+			            on_active: root.optimize_parameters(1)   
 			        Label:
 			            text: "SVM"
 			            color: 0,0,0,1
