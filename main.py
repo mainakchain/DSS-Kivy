@@ -112,13 +112,35 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
 
-	def draw_graph(self, *args):
+	def draw_graph(self, X, Y, type_graph, hue, *args):
+
+		
 		graph_display = self.ids.graph_display
+		graph_display.clear_widgets()
+		graph = type_graph.text
 		sns.set_palette('colorblind')
-		sns.countplot(data=self.data, x="survived", hue="pclass")
-		print plt.gcf().axes
-		graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-		print "done"
+		
+		if graph == 'Count Plot':
+
+			sns.countplot(data=self.data, x=X.text, hue=hue.text)
+			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+		elif graph == 'Pair Plot':
+			sns.pairplot(self.data, hue=hue.text, size=6, x_vars=X.text, y_vars=Y.text )
+			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+		elif graph == 'Factor Plot':
+			sns.factorplot(data=self.data, x=X.text, y=Y.text, col=hue.text)
+			# plt.x_ticks()
+			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+		# sns.countplot(data=self.data, x="survived", hue="pclass")
+		# print plt.gcf().axes
+		# graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+		# print "done"
 
 	def predict(self, *args):
 		predict_graph_display = self.ids.predict_graph
