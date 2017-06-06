@@ -56,7 +56,8 @@ class RootWidget(TabbedPanel):
 	file_name = StringProperty('None')
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
-	column_names = ''
+	column_names = []
+	number_of_columns = NumericProperty(len(column_names))
 	value = NumericProperty()
 	
 	def __init__(self, **kwargs):
@@ -69,6 +70,23 @@ class RootWidget(TabbedPanel):
 		self.big_dict[args[0]][1] = args[1]
 		print self.big_dict[args[0]][0]
 
+	def clean(self, column):
+		i = 0
+		seperator_list = []
+		local_data = self.data[column]
+		new_local_data = []
+		for entry in local_data:
+			if entry:
+				if entry not in seperator_list:
+					seperator_list.append(entry)
+					new_local_data.append(i)
+					i += 1
+				else :
+					new_local_data.append(seperator_list.index(entry))
+			else:
+				new_local_data.append(0)
+		self.data[column] = new_local_data
+
 	def import_dataset(self):
 
 		if self.file_name.endswith('zip'):
@@ -77,11 +95,18 @@ class RootWidget(TabbedPanel):
 		else:
 			self.data = pd.read_csv(self.file_name)
 		self.column_names = list(self.data)
-		# print self.column_names
-		# self.display_drop_section()
+		self.number_of_columns = len(self.column_names)
+		
+		for val, column in enumerate(self.data.dtypes):
+			if column == 'object':
+				self.clean(self.data.columns[val])
+
+
 		self.ids.layout_content.clear_widgets()
+		self.ids.set_features.clear_widgets()
 		self.ids.display_info.text = str(self.data.describe())
 		self.ids.update_status.text ='Dataset imported successfully!'
+		scroll_layout = self.ids.set_features
 		print type(self.data.head())
 		
 		for sl, column in enumerate(self.column_names):
@@ -96,6 +121,12 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(space) 	
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
+		for column in self.column_names:
+			lab = Label(text=column, size_hint_x=None, width=100)
+			ent = TextInput(size_hint_x=None, width=200)
+			scroll_layout.add_widget(lab)
+			scroll_layout.add_widget(ent)
+
 
 
 	def display_drop_section(self):
@@ -112,7 +143,7 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
 
-	def draw_graph(self, X, Y, type_graph, hue, *args):
+	def draw_graph(self, X, Y, type_graph, hue):
 
 		
 		graph_display = self.ids.graph_display
@@ -159,6 +190,8 @@ class RootWidget(TabbedPanel):
 				self.column_names.remove(self.big_dict[checkbox][0])
 		# self.display_drop_section()
 		self.ids.layout_content.clear_widgets()
+		self.ids.set_features.clear_widgets()
+		self.number_of_columns = len(self.column_names)
 		self.big_dict = self.empty_big_dict
 		for sl, column in enumerate(self.column_names):
 			label = Label(text=str(sl+1), size_hint=(0.2,1), pos_hint={'top': 0.5 + self.size_hint[1]/2})
@@ -173,10 +206,16 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(checkbox)
 			layout.add_widget(name)
 
+		for column in self.column_names:
+			lab = Label(text=column, size_hint_x=None, width=100)
+			ent = TextInput(size_hint_x=None, width=200)
+			self.ids.set_features.add_widget(lab)
+			self.ids.set_features.add_widget(ent)
+
 		self.column_name = self.column_names
 		self.ids.display_info.text = str(self.data.describe())
 
-	def dropDown(self, lists, *args):				#ID will be mainbutton id
+	def dropDown(self, lists, *args):
 		dropdown = DropDown()
 		for names in lists:
 			btn = Button(text=names, size_hint_y=None, height=25)
@@ -194,6 +233,123 @@ class RootWidget(TabbedPanel):
 	def local_file_popup(self, *args):
 		local = LocalFilePopup(self)
 		local.open()
+	def predict_parameters(self, value):
+		layout = self.ids.layout_predict_parameters
+
+		if value==1:
+			layout.clear_widgets()
+			c_label = Label(text='C', color=(1,1,1,2))
+			c_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='1.0')
+			layout.add_widget(c_label)
+			layout.add_widget(c_input)
+
+			tol_label = Label(text='tol', color=(1,1,1,2))
+			tol_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='0.049787')
+			layout.add_widget(tol_label)
+			layout.add_widget(tol_input)
+
+			degree_label = Label(text='degree', color=(1,1,1,2))
+			degree_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='3')
+			layout.add_widget(degree_label)
+			layout.add_widget(degree_input)
+
+			gamma_label = Label(text='gamma', color=(1,1,1,2))
+			gamma_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='auto')
+			layout.add_widget(gamma_label)
+			layout.add_widget(gamma_input)
+
+			coef0_label = Label(text='coef0', color=(1,1,1,2))
+			coef0_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='0.0')
+			layout.add_widget(coef0_label)
+			layout.add_widget(coef0_input)
+
+			kernel_label = Label(text = 'kernel', color=(1,1,1,2))
+			kernel_mainbutton = Button(text='rbf',size_hint=(None, None), height=30,width=140)
+			kernel_mainbutton.bind(on_press=lambda x:self.dropDown(['linear','poly','sigmoid','precomputed'], kernel_mainbutton))
+			layout.add_widget(kernel_label)
+			layout.add_widget(kernel_mainbutton)
+
+		if value==2 :
+			layout.clear_widgets()
+			n_estimators_label = Label(text='n estimators', color=(1,1,1,2))
+			n_estimators_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='10')
+			layout.add_widget(n_estimators_label)
+			layout.add_widget(n_estimators_input)
+
+			min_samples_leaf_label = Label(text='min samples\n    leaf', color=(1,1,1,2))
+			min_samples_leaf_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='1')
+			layout.add_widget(min_samples_leaf_label)
+			layout.add_widget(min_samples_leaf_input)
+
+			max_depth_label = Label(text='max depth', color=(1,1,1,2))
+			max_depth_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='None')
+			layout.add_widget(max_depth_label)
+			layout.add_widget(max_depth_input)
+
+			min_samples_split_label = Label(text='min samples\n     split', color=(1,1,1,2))
+			min_samples_split_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='2')
+			layout.add_widget(min_samples_split_label)
+			layout.add_widget(min_samples_split_input)
+
+			min_weight_fraction_leaf_label = Label(text='min weight\nfraction leaf', color=(1,1,1,2))
+			min_weight_fraction_leaf_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='0.0')
+			layout.add_widget(min_weight_fraction_leaf_label)
+			layout.add_widget(min_weight_fraction_leaf_input)
+
+			max_leaf_nodes_label = Label(text='max leaf\n  nodes', color=(1,1,1,2))
+			max_leaf_nodes_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='None')
+			layout.add_widget(max_leaf_nodes_label)
+			layout.add_widget(max_leaf_nodes_input)
+
+		if value==3:
+			layout.clear_widgets()
+			n_neighbours_label = Label(text='n neighbours', color=(1,1,1,2))
+			n_neighbours_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='5')
+			layout.add_widget(n_neighbours_label)
+			layout.add_widget(n_neighbours_input)
+
+			p_label = Label(text='p', color=(1,1,1,2))
+			p_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='0.0')
+			layout.add_widget(p_label)
+			layout.add_widget(p_input)
+
+			leaf_size_label = Label(text='leaf size', color=(1,1,1,2))
+			leaf_size_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='30')
+			layout.add_widget(leaf_size_label)
+			layout.add_widget(leaf_size_input)
+
+			n_jobs_label = Label(text='n jobs', color=(1,1,1,2))
+			n_jobs_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='1')
+			layout.add_widget(n_jobs_label)
+			layout.add_widget(n_jobs_input)
+
+			algorithm_label = Label(text = 'algorithm', color=(1,1,1,2))
+			algorithm_mainbutton = Button(text='auto',size_hint=(None, None), height=30,width=140)
+			algorithm_mainbutton.bind(on_press=lambda x:self.dropDown(['ball tree','kd tree','brute'], algorithm_mainbutton))
+			layout.add_widget(algorithm_label)
+			layout.add_widget(algorithm_mainbutton)
+
+			weights_label = Label(text = 'weights', color=(1,1,1,2))
+			weights_mainbutton = Button(text='uniform',size_hint=(None, None), height=30,width=140)
+			weights_mainbutton.bind(on_press=lambda x:self.dropDown(['rbf', 'distance'], weights_mainbutton))
+			layout.add_widget(weights_label)
+			layout.add_widget(weights_mainbutton)
+
 
 	def optimize_parameters(self, value):
 		layout = self.ids.layout_optimize_parameters
@@ -351,7 +507,7 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(algorithm_label)
 			layout.add_widget(algorithm_mainbutton)
 
-			dummy_label = Label()
+			dummy_label = Label(size_hint=(None, None), height=30,width=140)
 			layout.add_widget(dummy_label)
 
 			weights_label = Label(text = 'weights', color=(1,1,1,2))
