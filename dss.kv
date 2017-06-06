@@ -525,20 +525,51 @@
 
 
 
-	   #      BoxLayout:
-	   #      	orientation:'horizontal'
-	   #      	size_hint:(1,0.15)
-    #     		Button:
-				# 	text: 'GO!!'
-				# 	font_size: 20
-				# 	size_hint: (1, .3)
-				# 	on_press: root.optimize(*args)
+	        BoxLayout:
+	        	orientation:'horizontal'
+	        	size_hint:(1,0.15)
+        		
+	        	Button:
+					id: btn_x
+					text: 'X'
+					font_size: 20
+					size_hint: (1, .3)
+					on_press: root.dropDown(root.column_names, *args)
+					
 
-		    # BoxLayout:
-		    #     id: graph_display
-	     #        padding: [5, 5, 5, 5]
-	     #        width: self.parent.width * 2
-	     #        height: self.parent.height
+				Button:
+					id: btn_y
+					text: 'Y'
+					font_size: 20
+					size_hint: (1, .3)
+					on_press: root.dropDown(root.column_names, *args)
+				Button:
+					id: btn_hue
+					text: 'hue'
+					font_size: 20
+					size_hint: (1, .3)
+					on_press: root.dropDown(root.column_names, *args)					
+
+				Button:
+					id: btn_type
+					text: 'Type'
+					font_size: 20
+					size_hint: (1, .3)
+					on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
+
+
+        		Button:
+					text: 'Plot'
+					font_size: 20
+					size_hint: (1, .3)
+					on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue, *args)
+
+				
+		    BoxLayout:
+		        id: graph_display
+	            padding: [5, 5, 5, 5]
+	            width: self.parent.width * 2
+	            height: self.parent.height
 	            
 
 <InternetPopup>:
