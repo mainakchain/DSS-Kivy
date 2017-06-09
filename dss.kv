@@ -9,14 +9,18 @@
 		id: tab_preprocess
 		text: 'Preprocess'
 
+
+
 		BoxLayout:
 			orientation: 'vertical'
+
 			
 			BoxLayout:
 				id: layout
 				size_hint_y: None
 				spacing: 10
 				padding: [10, 10, 10, 10]
+
 
 
 				BoxLayout:
@@ -28,6 +32,8 @@
 					text: 'Choose source of DB:'
 					size: self.texture_size 
 					text_size: self.width, None
+					color: (0, 0, 0, 2)
+					font_size: '20sp'
 					halign: 'left'
 					valign: 'bottom'
 					size_hint: (.2, .5)
@@ -40,7 +46,9 @@
 
 				
 				Button:
+
 					text: 'Internet'
+					background_color: (64/255., 224/255., 208/255., 1)
 					spacing: (20, 0)
 					size_hint: (.2, .4)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
@@ -61,23 +69,36 @@
 				BoxLayout:
 					size_hint: (.15, .5)
 			
+			Widget:
+		        id: separator
+		        size_hint_y: None
+		        height: 6
+		        canvas:
+		            Color:
+		                rgb: 1, 1., 1.
+		            Rectangle:
+		                pos: 0, separator.center_y
+		                size: separator.width, 2
 			BoxLayout:
 				id: layout
 				size_hint_y: None
 				spacing: 10
 				padding: [5, 5, 5, 5]
-
+				
 				BoxLayout:
 					size_hint: (.01, .5)
+					padding: [5, 5, 5, 5]
 
 				Label:
 					text: 'File Dest.'
 					size: self.texture_size # for wrapping
 					text_size: self.width, None
 					halign: 'left'
+					color: (0, 0, 0, 2)
 					valign: 'bottom'
 					size_hint: (.2, .5)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+					font_size: '20sp'
 				
 				BoxLayout:
 
@@ -110,42 +131,35 @@
 
 				# BoxLayout:
 				# 	size_hint: (.15, .5)
-			
+
+
 			BoxLayout:
 				size_hint: (1,0.8)
+
 				
 				BoxLayout:
 					orientation: 'vertical'
+					size_hint: (.2, 1)
 
 					BoxLayout:
 						orientation: 'vertical'
 						size_hint: (1,0.9)
 
-
+						
 						BoxLayout:
-							size_hint: (1,0.1)
+							size_hint:(1, 0.1)
 
 							Label:
-								color: (1,0,0,1)
-								text:'S.No.'
-								halign: 'left'
-								valign: 'top'
-								size_hint:(0.2,1)
-								pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 
-							BoxLayout:
-								size_hint:(0.4,1)
-							
-							Label:
 								color: (1,0,0,1)
 								text:'Name'
 								halign: 'right'
 								valign: 'top'
 								size_hint:(0.4,1)
-								pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+								pos_hint: {'top': 1 + self.size_hint[1]/2}
 
-						BoxLayout:
-							size_hint:(1,.2)
+						# BoxLayout:
+						# 	size_hint:(1,.15)
 
 
 						ScrollView:
@@ -154,7 +168,7 @@
 							GridLayout:
 								id: layout_content
 								height: self.minimum_height
-								cols: 4
+								cols: 2
 								size_hint_y: None
 								row_default_height: '50dp'
                 				# row_force_default: True
@@ -172,28 +186,108 @@
 							size_hint: (0.3, 1)
 							on_press: root.drop_columns(*args)
 							# pos_hint: {'left': 0.5 + self.size_hint[0]/2}
+						
 						BoxLayout:
 							size_hint: (0.35, 1)
+				Widget:
+			        id: separator
+			        size_hint_x: None
+			        width: 1
+			        size_hint_y: 1
+			        canvas:
+			            Color:
+			                rgb: 1, 1., 1.
+			            Rectangle:
+			                pos: self.pos
+			                size: self.size
 
 
-
-
-
-						# TextInput:
-						# 	size_hint: (1,0.1)
-						# 	background_color:(1,0,0,1)
-
-
-				
-				ScrollView:
+				BoxLayout:
+					size_hint: (.2, 1)
+					orientation: 'vertical'
 					
-					Label:
-						id: display_info
-						color: (0, 1, 1, .5)
-						text: 'Please select the data base or paste the link address'
-						text_size: self.width, None
-						size_hint_y: None
-						height: self.texture_size[1]
+					BoxLayout:
+						size_hint:(1, 0.1)
+						Label:
+							text: 'Stats'
+
+					ScrollView:
+						
+						Label:
+							id: display_info
+							color: (0, 1, 1, .5)
+							text: 'Please select the data base or paste the link address'
+							text_size: self.width, None
+							size_hint_y: None
+							height: self.texture_size[1]
+
+				Widget:
+			        id: separator
+			        size_hint_x: None
+			        width: 1
+			        size_hint_y: 1
+			        canvas:
+			            Color:
+			                rgb: 1, 1., 1.
+			            Rectangle:
+			                pos: self.pos
+			                size: self.size
+
+				BoxLayout:
+					orientation: 'vertical'
+
+					BoxLayout:
+		            	size_hint: (1, .1)
+		            	BoxLayout:
+		            		size_hint: (.2, 1)
+		            	Button:
+							id: btn_x
+							text: 'X'
+							font_size: 20
+							size_hint: (None, .3)
+							width: 100
+							on_press: root.dropDown(root.column_names, *args)
+							
+						Button:
+							id: btn_y
+							text: 'Y'
+							font_size: 20
+							size_hint: (None, .3)
+							width: 100
+							on_press: root.dropDown(root.column_names, *args)
+						Button:
+							id: btn_hue
+							text: 'hue'
+							font_size: 20
+							size_hint: (None, .3)
+							width: 100
+							on_press: root.dropDown(root.column_names, *args)					
+
+						Button:
+							id: btn_type
+							text: 'Type'
+							font_size: 20
+							size_hint: (None, .3)
+							width: 150
+							on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
+
+						Button:
+							text: 'Plot'
+							font_size: 20
+							size_hint: (None, .3)
+							width: 100  	
+							on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue)
+		            	
+		            	BoxLayout:
+		            		size_hint: (.2, 1)
+					
+					BoxLayout:
+						size_hint: (1, .9)
+				        id: graph_display
+			            padding: [5, 5, 5, 5]
+			            width: self.parent.width * 2
+			            height: self.parent.height
+		            
 			
 			BoxLayout:
 				size_hint: (1, 0.1)
@@ -202,28 +296,24 @@
 				size_hint: (1, 0.1)
 
 				Label:
+
 					text: 'Status:'
-					size_hint: (0.1,0.5)
+					size_hint: (0.2,0.5)
 					pos_hint:{'top': 0.5 + self.size_hint[1]/2}
 					color: (0, 0, 0, 1)
 					valign: 'top'
 
-				BoxLayout:
-					size_hint:(0.3,1)
+				# BoxLayout:
+				# 	size_hint:(0.3,1)
 				Label:
+
 					id: update_status	
 					text: 'Welcome to DSS'
-					size_hint: (0.2,0.5)
+					size_hint: (0.8,0.5)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 					color: (0, 1, 1, .5)
 					valign: 'top'
 
-				BoxLayout:
-					size_hint: (0.4,1)
-
-
-
-			
 
 	
 	TabbedPanelItem:
@@ -245,7 +335,7 @@
 				BoxLayout:
 					id: layout_predict_model
 					orientation: 'horizontal'
-					# cols: 6
+
 					canvas.before:
 						Color:
 							rgb: 100/255., 149/255., 237/255.
@@ -255,19 +345,22 @@
 
 					CheckBox:
 		                group: "predict_models"
-		                color: [0,0,0,1]   
+		                color: (0,0.2,0.5,1)  
+		                on_active: root.predict_parameters(1)
 		            Label:
 		                text: "SVM"
-		                color: 0,0,0,1
+		                color: (0,0,0,1)
 
 		            CheckBox:
 		                group: "predict_models"
+		                on_active: root.predict_parameters(2)
 		            Label
 		                text: "Random Forest"
-		                color: 0,0,0,1
+		                color: (0,0,0,1)
 
 		            CheckBox:
 		                group: "predict_models"
+		                on_active: root.predict_parameters(3)
 		            Label
 		                text: "k-Nearest Neighbours " 
 		                color: 0,0,0,1
@@ -275,72 +368,153 @@
 		    BoxLayout:
 		    	orientation: 'horizontal'
 		    	size_hint: (1,.2)
+		    	canvas.before:
+		    		Color:
+		    			rgb: (0, 1, 1)
+
+		    		Rectangle:
+		    			size:self.size
+		    			pos: self.pos
 
 		    	Label:
 		    		text: 'Select Predict \n Parameter'
 		    		color: (0,1,1,2)
 		    		size_hint: (0.2,1)
 
-		    	BoxLayout:
-		    		id: layout_dropdown
 
-					# canvas.before:
-					# 	Color:
-					# 		rgb: 201/255., 203/255., 133/255.
-					# 	Rectangle:
-					# 		pos: self.pos
-					# 		size: self.size
-
+				ScrollView:
+					do_scroll_x: True
+					do_scroll_y: False
+					
 					BoxLayout:
+						id: set_features
+						canvas.before:
+							Color:
+								rgb: (.75, .65, .65)
+							Rectangle:
+								size: self.size
+								pos: self.pos
+						size_hint_x: None
+						width: root.number_of_columns*300
+						# width: self.texture_size[0]
 
-
-					BoxLayout:
-						id: layout_dropdown
-
-						Button:
-							id: predict_mainbutton
-							text: 'Press'
-							size_hint: (1,.5)
-							on_press: root.dropDown( root.column_names, *args) 
-							pos_hint: {'top': 0.5 + self.size_hint[1]/2}
-
-					BoxLayout:
+						
 
 
 			BoxLayout:
 				orientation: 'horizontal'
 
 				BoxLayout:
-					canvas.before:
-						Color:
-							rgb: 140/255., 203/255., 133/255.
-						Rectangle:
-							pos: self.pos
-							size: self.size			
-
-					Label:
-						text: 'Set Parameters'
-						font_size: 20
-
-				BoxLayout:
-					id: predict_graph
-					padding: (10,10,10,10)
-
-
-
-			BoxLayout:
-				orientation: 'vertical'
-				size_hint: (1,.2)
-
-				BoxLayout:
+					orientation: 'vertical'
+					size_hint: (.4,1)
 
 					BoxLayout:
-						size_hint: (2, 1)
+						size_hint: (1,.1)
+						# canvas.before:
+						# 	Color:
+						# 		rgb: 140/255., 50/255., 200/255.
+						# 	Rectangle:
+						# 		pos: self.pos
+						# 		size: self.size	
+						Label:
+							text: 'Set Parameters'
+							font_size: 20
+							color: (1,.2,.3,2)
 
-					Button:
-						text: 'Predict'
-						font_size: 15
+					BoxLayout:
+						canvas.before:
+							Color:
+								rgb: 140/255., 203/255., 133/255.
+							Rectangle:
+								pos: self.pos
+								size: self.size	
+						BoxLayout:
+							size_hint: (.1,1)
+							
+						GridLayout:
+							id: layout_predict_parameters
+							cols: 2
+							spacing: (5,10)
+							padding: (0,40,0,20)
+								
+
+						BoxLayout:
+							size_hint: (.2,1)
+							
+					
+
+				# BoxLayout:
+				# 	orientation: 'vertical'
+				# 	BoxLayout:
+			 #        	orientation:'horizontal'
+			 #        	size_hint:(1,0.15)
+			 #        	padding: [5, 5, 5, 5]
+			 #        	spacing: [5,10]
+
+			 #        	BoxLayout:
+			 #        		size_hint: (.5,1)
+			        		
+		        		
 						
+
+					
+			#     BoxLayout:
+			#         id: graph_display
+		 #            padding: [5, 5, 5, 5]
+		 #            width: self.parent.width * 2
+		 #            height: self.parent.height
+
+
+
+			# BoxLayout:
+			# 	orientation: 'vertical'
+			# 	size_hint: (1,.2)
+
+			# 	BoxLayout:
+
+			# 		BoxLayout:
+			# 			size_hint: (2, 1)
+
+					
+						# Button:
+						# 	id: btn_x
+						# 	text: 'X'
+						# 	font_size: 20
+						# 	size_hint: (None, .3)
+						# 	width: 100
+						# 	on_press: root.dropDown(root.column_names, *args)
+							
+						# Button:
+						# 	id: btn_y
+						# 	text: 'Y'
+						# 	font_size: 20
+						# 	size_hint: (None, .3)
+						# 	width: 100
+						# 	on_press: root.dropDown(root.column_names, *args)
+						# Button:
+						# 	id: btn_hue
+						# 	text: 'hue'
+						# 	font_size: 20
+						# 	size_hint: (None, .3)
+						# 	width: 100
+						# 	on_press: root.dropDown(root.column_names, *args)					
+
+						# Button:
+						# 	id: btn_type
+						# 	text: 'Type'
+						# 	font_size: 20
+						# 	size_hint: (None, .3)
+						# 	width: 150
+						# 	on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
+
+						# Button:
+						# 	text: 'Predict'
+						# 	font_size: 20
+						# 	size_hint: (None, .3)
+						# 	width: 100  	
+						# 	on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue)
+					
+	
 
 					BoxLayout:
 						size_hint: (.3, 1)
@@ -357,74 +531,116 @@
 		text: 'Optimize'
 
 		BoxLayout:
-			orientation: 'vertical'
-			size_hint:(0.5,1)
+
 			BoxLayout:
 				orientation: 'vertical'
-				size_hint:(1,0.25)
+				size_hint: (.5, 1)
 				BoxLayout:
 					orientation: 'vertical'
 					size_hint:(1,0.25)
-					Label:
-			        	#font_size: 20
-			            text: "Select Model:"
-			            size: self.texture_size
-			            color: (1,1,1,2)
-				BoxLayout:
-					orientation: 'horizontal'
-					size_hint:(1,0.25)
-					CheckBox:
-			            group: "models"
-			            color: (0,.5,1,1) 
-			            on_active: root.optimize_parameters(1)   
-			        Label:
-			            text: "SVM"
-			            color: 0,0,0,1
-				BoxLayout:
-					orientation: 'horizontal'
-					size_hint:(1,0.25)
-					CheckBox:
-			            group: "models"
-			            color: (0,.5,1,1)
-			            on_active: root.optimize_parameters(2, *args)
-			        Label
-			            text: "Random Forest"
-			            color: 0,0,0,1
-				BoxLayout:
-					orientation: 'horizontal'
-					size_hint:(1,0.25)
-					CheckBox:
-			            group: "models"
-			            color: (0,.5,1,1)
-			            on_active: root.optimize_parameters(3, *args)
-			        Label
-			            text: "k-Nearest\nNeighbours " 
-			            color: 0,0,0,1
+					BoxLayout:
+						orientation: 'vertical'
+						size_hint:(1,0.25)
+						Label:
+				        	#font_size: 20
+				            text: "Select Model:"
+				            size: self.texture_size
+				            color: (1,1,1,2)
+					BoxLayout:
+						orientation: 'horizontal'
+						size_hint:(1,0.25)
+						canvas.before:
+							Color:
+								rgb: 140/255., 203/255., 133/255.
+							Rectangle:
+								pos: self.pos
+								size: self.size			
 
+						CheckBox:
+				            group: "models"
+				            color: (0,.5,1,1) 
+				            on_active: root.optimize_parameters(1)   
+				        Label:
+				            text: "SVM"
+				            color: 0,0,0,1
+					BoxLayout:
+						orientation: 'horizontal'
+						size_hint:(1,0.25)
+						canvas.before:
+							Color:
+								rgb: 140/255., 203/255., 133/255.
+							Rectangle:
+								pos: self.pos
+								size: self.size			
+
+						CheckBox:
+				            group: "models"
+				            color: (0,.5,1,1)
+				            on_active: root.optimize_parameters(2)
+				        Label
+				            text: "Random Forest"
+				            color: 0,0,0,1
+					BoxLayout:
+						orientation: 'horizontal'
+						size_hint:(1,0.25)
+						canvas.before:
+							Color:
+								rgb: 140/255., 203/255., 133/255.
+							Rectangle:
+								pos: self.pos
+								size: self.size			
+
+						CheckBox:
+				            group: "models"
+				            color: 0,.5,1,5
+				            on_active: root.optimize_parameters(3)
+				        Label
+				            text: "k-Nearest Neighbours " 
+				            color: 0,0,0,1
+
+				BoxLayout:
+		        	orientation: 'vertical'
+		        	size_hint:(1,0.7)
+
+		        	BoxLayout:
+		        		size_hint: (1,None)
+		        		canvas.before:
+							Color:
+								rgb: 50/255., 203/255., 133/255.
+							Rectangle:
+								pos: self.pos
+								size: self.size			
+
+
+						Label:
+			        		text: "Parameters"
+			        		font_size: 20
+			        		pos_hint: {'top': 1 + self.size_hint[1]/2}
+			        		valign: 'top'
+
+		        	GridLayout:
+		        		id: layout_optimize_parameters
+		        		cols: 3
+		        		spacing: [5,10]
+		        		padding: [20,20,20,10]
+		        		size_hint: (None,1)
+		        		width: self.parent.width
+					
+				BoxLayout:
+					size_hint:(1,0.05)
+					BoxLayout:
+						size_hint:(0.25,1)
+					BoxLayout:
+						size_hint:(0.2,1)
+						Button:
+							text:'Go!'
+							# pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+
+		        	BoxLayout:
+		        		size_hint:(0.55,1)
 			BoxLayout:
-	        	orientation: 'vertical'
-	        	size_hint:(1,0.7)
-				Label:
-	        		text: "Parameters"
-	        		font_size: 20
-	        		pos_hint: {'top': 0.5 + self.size_hint[1]/2}
-
-	        	GridLayout:
-	        		id: layout_optimize_parameters
-	        		cols: 3
+				orientation: 'vertical' 
 				
-			BoxLayout:
-				size_hint:(1,0.05)
-				BoxLayout:
-					size_hint:(0.25,1)
-				BoxLayout:
-					size_hint:(0.2,1)
-					Button:
-						text:'Go!'
-						# pos_hint: {'top': 0.5 + self.size_hint[1]/2}
-
-	        	BoxLayout:
-	        		size_hint:(0.55,1)
 	        
 		  #   BoxLayout:
 		  #       orientation: "horizontal"
@@ -477,58 +693,7 @@
 		  #       #         Rectangle:
 		  #       #             pos: self.pos
 		  #       #             size: self.size
-
-		           
-
-
-
-
-	        BoxLayout:
-	        	orientation:'horizontal'
-	        	size_hint:(1,0.15)
-        		
-	        	Button:
-					id: btn_x
-					text: 'X'
-					font_size: 20
-					size_hint: (1, .3)
-					on_press: root.dropDown(root.column_names, *args)
-					
-
-				Button:
-					id: btn_y
-					text: 'Y'
-					font_size: 20
-					size_hint: (1, .3)
-					on_press: root.dropDown(root.column_names, *args)
-				Button:
-					id: btn_hue
-					text: 'hue'
-					font_size: 20
-					size_hint: (1, .3)
-					on_press: root.dropDown(root.column_names, *args)					
-
-				Button:
-					id: btn_type
-					text: 'Type'
-					font_size: 20
-					size_hint: (1, .3)
-					on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
-
-
-        		Button:
-					text: 'Plot'
-					font_size: 20
-					size_hint: (1, .3)
-					on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue, *args)
-
-				
-		    BoxLayout:
-		        id: graph_display
-	            padding: [5, 5, 5, 5]
-	            width: self.parent.width * 2
-	            height: self.parent.height
-	            
+       
 
 <InternetPopup>:
 	title: 'Choose File'
