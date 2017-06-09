@@ -131,7 +131,16 @@
 
 				# BoxLayout:
 				# 	size_hint: (.15, .5)
-
+			Widget:
+		        id: separator
+		        size_hint_y: None
+		        height: 6
+		        canvas:
+		            Color:
+		                rgb: 1, 1., 1.
+		            Rectangle:
+		                pos: 0, separator.center_y
+		                size: separator.width, 2
 
 			BoxLayout:
 				size_hint: (1,0.8)
@@ -207,12 +216,28 @@
 					orientation: 'vertical'
 					
 					BoxLayout:
+						canvas.before:
+							Color:
+								rgb: (0, 1, 1)
+							Rectangle:
+								size: self.size
+								pos: self.pos
 						size_hint:(1, 0.1)
 						Label:
 							text: 'Stats'
+					Widget:
+				        id: separator
+				        size_hint_y: None
+				        height: 1
+				        canvas:
+				            Color:
+				                rgb: 1, 1., 1.
+				            Rectangle:
+				                pos: self.pos
+				                size: self.size
 
 					ScrollView:
-						
+						size_hint_y: .9
 						Label:
 							id: display_info
 							color: (0, 1, 1, .5)
@@ -238,60 +263,95 @@
 
 					BoxLayout:
 		            	size_hint: (1, .1)
+		            	canvas.before:
+	            			Color:
+	            				rgb: (0, 1, 1)
+	            			Rectangle:
+	            				size: self.size
+	            				pos: self.pos
 		            	BoxLayout:
 		            		size_hint: (.2, 1)
 		            	Button:
 							id: btn_x
 							text: 'X'
 							font_size: 20
-							size_hint: (None, .3)
-							width: 100
+							# pos_hint: {'top': .55}
+							size_hint: (.2, 1)
 							on_press: root.dropDown(root.column_names, *args)
 							
 						Button:
 							id: btn_y
 							text: 'Y'
 							font_size: 20
-							size_hint: (None, .3)
-							width: 100
+							# pos_hint: {'top': .55}
+							size_hint: (.2, 1)
 							on_press: root.dropDown(root.column_names, *args)
 						Button:
 							id: btn_hue
 							text: 'hue'
 							font_size: 20
-							size_hint: (None, .3)
-							width: 100
+							# pos_hint: {'top': .55}
+							size_hint: (.2, 1)
 							on_press: root.dropDown(root.column_names, *args)					
 
 						Button:
 							id: btn_type
 							text: 'Type'
 							font_size: 20
-							size_hint: (None, .3)
-							width: 150
+							# pos_hint: {'top': .55}
+							size_hint: (.2, 1)
 							on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
 
 						Button:
 							text: 'Plot'
 							font_size: 20
-							size_hint: (None, .3)
-							width: 100  	
+							# pos_hint: {'top': .55}
+							size_hint: (.2, 1)
 							on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue)
-		            	
-		            	BoxLayout:
-		            		size_hint: (.2, 1)
-					
+
+						BoxLayout:
+							size_hint_y: 1
+							size_hint_x: .2
+
+					Widget:
+				        id: separator
+				        size_hint_y: None
+				        height: 1
+				        canvas:
+				            Color:
+				                rgb: 1, 1., 1.
+				            Rectangle:
+				                pos: self.pos
+				                size: self.size
 					BoxLayout:
 						size_hint: (1, .9)
 				        id: graph_display
 			            padding: [5, 5, 5, 5]
 			            width: self.parent.width * 2
 			            height: self.parent.height
-		            
+		    Widget:
+		        id: separator
+		        size_hint_y: None
+		        height: 6
+		        canvas:
+		            Color:
+		                rgb: 1, 1., 1.
+		            Rectangle:
+		                pos: 0, separator.center_y
+		                size: separator.width, 2        
 			
 			BoxLayout:
 				size_hint: (1, 0.1)
-			
+			Widget:
+		        id: separator
+		        size_hint_y: None
+		        height: 6
+		        canvas:
+		            Color:
+		                rgb: 1, 1., 1.
+		            Rectangle:
+		                pos: 0, separator.center_y
+		                size: separator.width, 2
 			BoxLayout:
 				size_hint: (1, 0.1)
 
@@ -438,6 +498,7 @@
 							padding: (0,40,0,20)
 								
 
+
 						BoxLayout:
 							size_hint: (.2,1)
 							
@@ -458,62 +519,52 @@
 						
 
 					
-			#     BoxLayout:
-			#         id: graph_display
-		 #            padding: [5, 5, 5, 5]
-		 #            width: self.parent.width * 2
-		 #            height: self.parent.height
+			    BoxLayout:
+			        id: graph_display
+		            padding: [5, 5, 5, 5]
+		            width: self.parent.width * 2
+		            height: self.parent.height
 
+				BoxLayout:
+					size_hint: (.2,1)
+								
+					Button:
+						id: btn_x
+						text: 'X'
+						font_size: 20
+						size_hint: (None, .3)
+						width: 100
+						on_press: root.dropDown(root.column_names, *args)
+						
+					Button:
+						id: btn_y
+						text: 'Y'
+						font_size: 20
+						size_hint: (None, .3)
+						width: 100
+						on_press: root.dropDown(root.column_names, *args)
+					Button:
+						id: btn_hue
+						text: 'hue'
+						font_size: 20
+						size_hint: (None, .3)
+						width: 100
+						on_press: root.dropDown(root.column_names, *args)					
 
+					Button:
+						id: btn_type
+						text: 'Type'
+						font_size: 20
+						size_hint: (None, .3)
+						width: 150
+						on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
 
-			# BoxLayout:
-			# 	orientation: 'vertical'
-			# 	size_hint: (1,.2)
-
-			# 	BoxLayout:
-
-			# 		BoxLayout:
-			# 			size_hint: (2, 1)
-
-					
-						# Button:
-						# 	id: btn_x
-						# 	text: 'X'
-						# 	font_size: 20
-						# 	size_hint: (None, .3)
-						# 	width: 100
-						# 	on_press: root.dropDown(root.column_names, *args)
-							
-						# Button:
-						# 	id: btn_y
-						# 	text: 'Y'
-						# 	font_size: 20
-						# 	size_hint: (None, .3)
-						# 	width: 100
-						# 	on_press: root.dropDown(root.column_names, *args)
-						# Button:
-						# 	id: btn_hue
-						# 	text: 'hue'
-						# 	font_size: 20
-						# 	size_hint: (None, .3)
-						# 	width: 100
-						# 	on_press: root.dropDown(root.column_names, *args)					
-
-						# Button:
-						# 	id: btn_type
-						# 	text: 'Type'
-						# 	font_size: 20
-						# 	size_hint: (None, .3)
-						# 	width: 150
-						# 	on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
-
-						# Button:
-						# 	text: 'Predict'
-						# 	font_size: 20
-						# 	size_hint: (None, .3)
-						# 	width: 100  	
-						# 	on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue)
-					
+					Button:
+						text: 'Predict'
+						font_size: 20
+						size_hint: (None, .3)
+						width: 100  	
+						on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue)					
 	
 
 					BoxLayout:
@@ -521,7 +572,7 @@
 
 				Label:
 					id: predict_status
-					text: 'Happy Prediction :)!!!'
+					text: 'Happy Prediction'
 
 
 

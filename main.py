@@ -142,6 +142,7 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(name)
 
 	def draw_graph(self, X, Y, type_graph, hue):
+
 		
 		graph_display = self.ids.graph_display
 		graph_display.clear_widgets()
