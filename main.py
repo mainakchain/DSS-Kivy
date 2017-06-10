@@ -152,6 +152,7 @@ class RootWidget(TabbedPanel):
 		if graph == 'Count Plot':
 
 			sns.countplot(data=self.data, x=X.text, hue=hue.text)
+			plt.xticks(rotation='vertical')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
@@ -166,7 +167,35 @@ class RootWidget(TabbedPanel):
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
+		elif graph == 'Dist Plot':
+			g = sns.FacetGrid(self.data, col=hue.text)  
+			g.map(sns.distplot, X.text)
+			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
+		elif graph == 'Scatter Plot':
+			g = sns.FacetGrid(self.data, col=hue.text)  
+			g.map(plt.scatter, X.text, Y.text)
+			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+		elif graph == 'Reg Plot':
+			g = sns.FacetGrid(self.data, col=hue.text)  
+			g.map(sns.regplot, X.text, Y.text)
+			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+		elif graph == 'Kde Plot':
+			g = sns.FacetGrid(self.data, col=hue.text, row="survived")  
+			g.map(sns.kdeplot, X.text, Y.text)
+ 			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+		elif graph == 'Joint Plot':
+			sns.jointplot(X.text, Y.text, data=self.data, kind='kde')
+			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+ 
 	def predict(self, *args):
 		predict_graph_display = self.ids.predict_graph
 		sns.set_palette('colorblind')
