@@ -195,6 +195,11 @@ class RootWidget(TabbedPanel):
 			sns.jointplot(X.text, Y.text, data=self.data, kind='kde')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+		elif graph == 'Violin Plot':
+			sns.violinplot(x=X.text, y=Y.text, data=self.data)
+			print plt.gcf().axes
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
  
 	def predict(self, *args):
 		predict_graph_display = self.ids.predict_graph
