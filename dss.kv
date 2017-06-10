@@ -13,13 +13,20 @@
 
 		BoxLayout:
 			orientation: 'vertical'
-
+			canvas.before:
+				
+				Rectangle:
+					# source: './static/sexy_back.jpg'
+					# source: 'd.jpg'
+					source: './static/back_btn.jpg'
+					size: self.size
+					pos: self.pos
 			
 			BoxLayout:
 				id: layout
-				size_hint_y: None
+				size_hint_y: .1
 				spacing: 10
-				padding: [10, 10, 10, 10]
+				padding: [10, 0, 10, 0]
 
 
 
@@ -48,11 +55,13 @@
 				Button:
 
 					text: 'Internet'
-					background_color: (64/255., 224/255., 208/255., 1)
+					
 					spacing: (20, 0)
-					size_hint: (.2, .4)
+					# background_normal: './static/back_btn.jpg'
+					size_hint: (.2, .7)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 					on_press: root.internet_popup(*args)
+
 
 
 				BoxLayout:
@@ -62,7 +71,8 @@
 
 				Button:
 					text: 'Local File'
-					size_hint: (.2, .4)
+					size_hint: (.2, .7)
+					# background_normal: './static/back_btn.jpg'
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 					on_press: root.local_file_popup(*args)
 
@@ -72,16 +82,16 @@
 			Widget:
 		        id: separator
 		        size_hint_y: None
-		        height: 6
+		        height: 3
 		        canvas:
 		            Color:
-		                rgb: 1, 1., 1.
+		                rgb: 0, 0., 0.
 		            Rectangle:
 		                pos: 0, separator.center_y
 		                size: separator.width, 2
 			BoxLayout:
 				id: layout
-				size_hint_y: None
+				size_hint_y: .1
 				spacing: 10
 				padding: [5, 5, 5, 5]
 				
@@ -125,7 +135,8 @@
 				
 				Button:
 					text: 'Import'	
-					size_hint: (.2, .4)
+					# background_normal: './static/back_btn.jpg'
+					size_hint: (.2, .8)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 					on_press: root.import_dataset()
 
@@ -134,7 +145,7 @@
 			Widget:
 		        id: separator
 		        size_hint_y: None
-		        height: 6
+		        height: 3
 		        canvas:
 		            Color:
 		                rgb: 1, 1., 1.
@@ -150,9 +161,11 @@
 					orientation: 'vertical'
 					size_hint: (.2, 1)
 
+
 					BoxLayout:
 						orientation: 'vertical'
 						size_hint: (1,0.9)
+
 
 						
 						BoxLayout:
@@ -160,18 +173,27 @@
 
 							Label:
 
-								color: (1,0,0,1)
 								text:'Name'
 								halign: 'right'
 								valign: 'top'
 								size_hint:(0.4,1)
 								pos_hint: {'top': 1 + self.size_hint[1]/2}
-
+						Widget:
+					        id: separator
+					        size_hint_y: None
+					        height: 1
+					        canvas:
+					            Color:
+					                rgb: 1, 1., 1.
+					            Rectangle:
+					                pos: self.pos
+					                size: self.size
 						# BoxLayout:
 						# 	size_hint:(1,.15)
 
 
 						ScrollView:
+							size_hint_y: 0.8
 							
 							
 							GridLayout:
@@ -185,19 +207,20 @@
 
 					BoxLayout:
 						size_hint: (1,0.1)
-
-						BoxLayout:
-							size_hint: (0.35,1)
+						padding: (5,5,5,5)
+						# BoxLayout:
+						# 	size_hint: (0.35,1)
 							
 
 						Button:
 							text: 'Drop'
+							# background_normal: './static/back_btn.jpg'
 							size_hint: (0.3, 1)
 							on_press: root.drop_columns(*args)
 							# pos_hint: {'left': 0.5 + self.size_hint[0]/2}
 						
-						BoxLayout:
-							size_hint: (0.35, 1)
+						# BoxLayout:
+						# 	size_hint: (0.35, 1)
 				Widget:
 			        id: separator
 			        size_hint_x: None
@@ -216,12 +239,7 @@
 					orientation: 'vertical'
 					
 					BoxLayout:
-						canvas.before:
-							Color:
-								rgb: (0, 1, 1)
-							Rectangle:
-								size: self.size
-								pos: self.pos
+						
 						size_hint:(1, 0.1)
 						Label:
 							text: 'Stats'
@@ -235,16 +253,19 @@
 				            Rectangle:
 				                pos: self.pos
 				                size: self.size
+				    BoxLayout:
+				    	size_hint_y: .9
+						padding: (10,10,0,10)
 
-					ScrollView:
-						size_hint_y: .9
-						Label:
-							id: display_info
-							color: (0, 1, 1, .5)
-							text: 'Please select the data base or paste the link address'
-							text_size: self.width, None
-							size_hint_y: None
-							height: self.texture_size[1]
+						ScrollView:
+							
+							Label:
+								id: display_info
+								color: (0, 1, 1, .5)
+								text: 'Please select the data base or paste the link address'
+								text_size: self.width, None
+								size_hint_y: None
+								height: self.texture_size[1]
 
 				Widget:
 			        id: separator
@@ -263,17 +284,13 @@
 
 					BoxLayout:
 		            	size_hint: (1, .1)
-		            	canvas.before:
-	            			Color:
-	            				rgb: (0, 1, 1)
-	            			Rectangle:
-	            				size: self.size
-	            				pos: self.pos
+		            	
 		            	BoxLayout:
 		            		size_hint: (.2, 1)
 		            	Button:
 							id: btn_x
 							text: 'X'
+							# background_normal: './static/back_btn.jpg'
 							font_size: 20
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
@@ -282,6 +299,7 @@
 						Button:
 							id: btn_y
 							text: 'Y'
+							# background_normal: './static/back_btn.jpg'
 							font_size: 20
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
@@ -290,6 +308,7 @@
 							id: btn_hue
 							text: 'hue'
 							font_size: 20
+							# background_normal: './static/back_btn.jpg'
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
 							on_press: root.dropDown(root.column_names, *args)					
@@ -300,11 +319,13 @@
 							font_size: 20
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
+							# background_normal: './static/back_btn.jpg'
 							on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
 
 						Button:
 							text: 'Plot'
 							font_size: 20
+							# background_normal: './static/back_btn.jpg'
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
 							on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue)
@@ -340,18 +361,9 @@
 		                pos: 0, separator.center_y
 		                size: separator.width, 2        
 			
-			BoxLayout:
-				size_hint: (1, 0.1)
-			Widget:
-		        id: separator
-		        size_hint_y: None
-		        height: 6
-		        canvas:
-		            Color:
-		                rgb: 1, 1., 1.
-		            Rectangle:
-		                pos: 0, separator.center_y
-		                size: separator.width, 2
+			# BoxLayout:
+			# 	size_hint: (1, 0.1)
+			
 			BoxLayout:
 				size_hint: (1, 0.1)
 
