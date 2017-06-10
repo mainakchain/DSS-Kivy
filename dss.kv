@@ -17,7 +17,8 @@
 				
 				Rectangle:
 					# source: './static/sexy_back.jpg'
-					source: 'd.jpg'
+					# source: 'd.jpg'
+					source: './static/back_btn.jpg'
 					size: self.size
 					pos: self.pos
 			
@@ -56,7 +57,7 @@
 					text: 'Internet'
 					
 					spacing: (20, 0)
-					background_normal: './static/back_btn.jpg'
+					# background_normal: './static/back_btn.jpg'
 					size_hint: (.2, .7)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 					on_press: root.internet_popup(*args)
@@ -71,7 +72,7 @@
 				Button:
 					text: 'Local File'
 					size_hint: (.2, .7)
-					background_normal: './static/back_btn.jpg'
+					# background_normal: './static/back_btn.jpg'
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 					on_press: root.local_file_popup(*args)
 
@@ -84,7 +85,7 @@
 		        height: 3
 		        canvas:
 		            Color:
-		                rgb: 1, 0., 0.
+		                rgb: 0, 0., 0.
 		            Rectangle:
 		                pos: 0, separator.center_y
 		                size: separator.width, 2
@@ -134,7 +135,7 @@
 				
 				Button:
 					text: 'Import'	
-					background_normal: './static/back_btn.jpg'
+					# background_normal: './static/back_btn.jpg'
 					size_hint: (.2, .8)
 					pos_hint: {'top': 0.5 + self.size_hint[1]/2}
 					on_press: root.import_dataset()
@@ -213,7 +214,7 @@
 
 						Button:
 							text: 'Drop'
-							background_normal: './static/back_btn.jpg'
+							# background_normal: './static/back_btn.jpg'
 							size_hint: (0.3, 1)
 							on_press: root.drop_columns(*args)
 							# pos_hint: {'left': 0.5 + self.size_hint[0]/2}
@@ -289,7 +290,7 @@
 		            	Button:
 							id: btn_x
 							text: 'X'
-							background_normal: './static/back_btn.jpg'
+							# background_normal: './static/back_btn.jpg'
 							font_size: 20
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
@@ -298,7 +299,7 @@
 						Button:
 							id: btn_y
 							text: 'Y'
-							background_normal: './static/back_btn.jpg'
+							# background_normal: './static/back_btn.jpg'
 							font_size: 20
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
@@ -307,7 +308,7 @@
 							id: btn_hue
 							text: 'hue'
 							font_size: 20
-							background_normal: './static/back_btn.jpg'
+							# background_normal: './static/back_btn.jpg'
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
 							on_press: root.dropDown(root.column_names, *args)					
@@ -318,13 +319,13 @@
 							font_size: 20
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
-							background_normal: './static/back_btn.jpg'
+							# background_normal: './static/back_btn.jpg'
 							on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot'], *args)
 
 						Button:
 							text: 'Plot'
 							font_size: 20
-							background_normal: './static/back_btn.jpg'
+							# background_normal: './static/back_btn.jpg'
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
 							on_press: root.draw_graph(btn_x, btn_y, btn_type, btn_hue)
