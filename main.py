@@ -15,11 +15,15 @@ from kivy.properties import ObjectProperty
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.uix.spinner import Spinner
 from kivy.uix.dropdown import DropDown
 from kivy.uix.textinput import TextInput
 from kivy.core.window import Window
 from kivy.uix.scrollview import ScrollView
 Window.clearcolor = (78/255., 208/255., 155/255., 1)
+
+from kivy.config import Config
+Config.set('graphics', 'fullscreen', 'auto')
 
 import matplotlib
 matplotlib.use("module://kivy.garden.matplotlib.backend_kivyagg")
@@ -56,7 +60,7 @@ class RootWidget(TabbedPanel):
 	file_name = StringProperty('None')
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
-	column_names = []
+	column_names = ['None']
 	number_of_columns = NumericProperty(len(column_names))
 	value = NumericProperty()
 	
@@ -103,7 +107,7 @@ class RootWidget(TabbedPanel):
 
 
 		self.ids.layout_content.clear_widgets()
-		self.ids.set_features.clear_widgets()
+		# self.ids.set_features.clear_widgets()
 		self.ids.display_info.text = str(self.data.describe())
 		self.ids.update_status.text ='Dataset imported successfully!'
 		scroll_layout = self.ids.set_features
@@ -242,13 +246,29 @@ class RootWidget(TabbedPanel):
 	def dropDown(self, lists, *args):
 		dropdown = DropDown()
 		for names in lists:
-			btn = Button(text=names, size_hint_y=None, height=25)
+			btn = Button(text=names, size_hint_y=None, height=30)
 			btn.bind(on_release=lambda btn: dropdown.select(btn.text))
 			dropdown.add_widget(btn)
 		args[0].bind(on_release=dropdown.open)
 		dropdown.bind(on_select=lambda instance, x: setattr(args[0] ,'text', x))
 		# scroll = ScrollView(size_hint=(1, None), do_scroll_y=True, do_scroll_x=False)
 		# scroll.add_widget(self.ids.layout_dropdown)
+
+	def optimize_algo_selection(self, *args):
+		check = self.ids.predict_checkbox_algo
+		layout = self.ids.predict_optimize_algo_selection
+		if check.active == True:
+			layout.clear_widgets()
+			checkbox1 = CheckBox(group='aglo_selection')
+			label1 = Label(text='GridSearchCV')
+			checkbox2 = CheckBox(group='aglo_selection')
+			label2 = Label(text='Genetic Algorithm')
+			layout.add_widget(checkbox1)
+			layout.add_widget(label1)
+			layout.add_widget(checkbox2)
+			layout.add_widget(label2)
+		else:
+			layout.clear_widgets()
 
 	def internet_popup(self, *args):
 		internet = InternetPopup(self)

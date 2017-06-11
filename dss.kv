@@ -395,90 +395,147 @@
 		BoxLayout:
 			orientation: 'vertical'
 
+
+
+
 			BoxLayout:
 				orientation: 'horizontal'
-				size_hint: (1,.2)
+				size_hint: (1,.1)
+				canvas.before:
+					Color:
+						rgb: 100/255., 149/255., 237/255.
+					Rectangle:
+						pos: self.pos
+						size: self.size
 
 				Label:
-					text: 'Select Model'
+					text: 'Select Classifier Model:'
 					size_hint: (0.2,1)
 					color: (0,1,1,2)
 
-				BoxLayout:
-					id: layout_predict_model
-					orientation: 'horizontal'
-
-					canvas.before:
-						Color:
-							rgb: 100/255., 149/255., 237/255.
-						Rectangle:
-							pos: self.pos
-							size: self.size
-
-					CheckBox:
-		                group: "predict_models"
-		                color: (0,0.2,0.5,1)  
-		                on_active: root.predict_parameters(1)
-		            Label:
-		                text: "SVM"
-		                color: (0,0,0,1)
-
-		            CheckBox:
-		                group: "predict_models"
-		                on_active: root.predict_parameters(2)
-		            Label
-		                text: "Random Forest"
-		                color: (0,0,0,1)
-
-		            CheckBox:
-		                group: "predict_models"
-		                on_active: root.predict_parameters(3)
-		            Label
-		                text: "k-Nearest Neighbours " 
-		                color: 0,0,0,1
-
-		    BoxLayout:
-		    	orientation: 'horizontal'
-		    	size_hint: (1,.2)
-		    	canvas.before:
-		    		Color:
-		    			rgb: (0, 1, 1)
-
-		    		Rectangle:
-		    			size:self.size
-		    			pos: self.pos
-
-		    	Label:
-		    		text: 'Select Predict \n Parameter'
-		    		color: (0,1,1,2)
-		    		size_hint: (0.2,1)
-
-
-				ScrollView:
-					do_scroll_x: True
-					do_scroll_y: False
 					
-					BoxLayout:
-						id: set_features
-						canvas.before:
-							Color:
-								rgb: (.75, .65, .65)
-							Rectangle:
-								size: self.size
-								pos: self.pos
-						size_hint_x: None
-						width: root.number_of_columns*300
-						# width: self.texture_size[0]
+
+				Button:															#'predict' classifier model choose drop down menu
+					id: predict_classifier_dropdown
+					text: 'Choose Classifier'
+					font_size: 20
+					pos_hint: {'top': .7}
+					size_hint: (.2, .5)
+					on_press: root.dropDown(["Tree based", "Non-Tree based"], *args)
+
+				BoxLayout:
+					size_hint: (.2,1)
+
+			BoxLayout:
+				orientation: 'horizontal'
+				size_hint: (1,.1)
+
+				canvas.before:
+					Color:
+						rgb: 255/255., 149/255., 237/255.
+					Rectangle:
+						pos: self.pos
+						size: self.size
+
+				Label:
+					text: 'Select Predict Parameter:'
+					size_hint: (0.2,1)
+					color: (0,1,1,2)
+
+					# canvas.before:
+					# 	Color:
+					# 		rgb: 100/255., 149/255., 237/255.
+					# 	Rectangle:
+					# 		pos: self.pos
+					# 		size: self.size
+
+				# Button:															#'predict' parameter to predict choose drop down menu
+				# 	id: predict_classifier_dropdown
+				# 	text: 'Choose Parameter'
+				# 	font_size: 20
+				# 	pos_hint: {'top': .7}
+				# 	size_hint: (.2, .5)
+				# 	on_press: root.dropDown(root.column_names, *args)	
+
+			    Spinner:
+			    	id: predict_dropdown_choose_parameter
+			        text: "Choose Parameter"
+			        values: root.column_names
+			        # background_color: (0.784, 0.443, 0.216, 1) if self.state == 'normal' else (0.659, 0.522, 0.431, 1)
+			        color: (0.957, 0.890, 0.843, 1)
+			        font_size: 20
+					pos_hint: {'top': .7} 	
+			        size_hint: (.2, .5)
+
+
+				BoxLayout:
+					size_hint: (.2, 1)		
+
+					# CheckBox:
+		   #              group: "predict_models"
+		   #              color: (0,0.2,0.5,1)  
+		   #              on_active: root.predict_parameters(1)
+		   #          Label:
+		   #              text: "SVM"
+		   #              color: (0,0,0,1)
+
+		   #          CheckBox:
+		   #              group: "predict_models"
+		   #              on_active: root.predict_parameters(2)
+		   #          Label
+		   #              text: "Random Forest"
+		   #              color: (0,0,0,1)
+
+		   #          CheckBox:
+		   #              group: "predict_models"
+		   #              on_active: root.predict_parameters(3)
+		   #          Label
+		   #              text: "k-Nearest Neighbours " 
+		   #              color: 0,0,0,1
+
+		  #   BoxLayout:
+		  #   	orientation: 'horizontal'
+		  #   	size_hint: (1,.2)
+		  #   	canvas.before:
+		  #   		Color:
+		  #   			rgb: (0, 1, 1)
+
+		  #   		Rectangle:
+		  #   			size:self.size
+		  #   			pos: self.pos
+
+		  #   	Label:
+		  #   		text: 'Select Predict \n Parameter'
+		  #   		color: (0,1,1,2)
+		  #   		size_hint: (0.2,1)
+
+
+				# ScrollView:
+				# 	do_scroll_x: True
+				# 	do_scroll_y: False
+					
+				# 	BoxLayout:
+				# 		id: set_features
+				# 		canvas.before:
+				# 			Color:
+				# 				rgb: (.75, .65, .65)
+				# 			Rectangle:
+				# 				size: self.size
+				# 				pos: self.pos
+				# 		size_hint_x: None
+				# 		width: root.number_of_columns*300
+				# 		# width: self.texture_size[0]
 
 						
 
 
 			BoxLayout:
 				orientation: 'horizontal'
+				size_hint: (1,.6)
 
 				BoxLayout:
 					orientation: 'vertical'
-					size_hint: (.4,1)
+					size_hint: (.3,1)
 
 					BoxLayout:
 						size_hint: (1,.1)
@@ -515,25 +572,130 @@
 							size_hint: (.2,1)
 							
 					
+				BoxLayout:
+					id: predict_optimize_layout
+					orientation: 'vertical'
+					size_hint: (.45,1)
 
-				# BoxLayout:
-				# 	orientation: 'vertical'
-				# 	BoxLayout:
-			 #        	orientation:'horizontal'
-			 #        	size_hint:(1,0.15)
-			 #        	padding: [5, 5, 5, 5]
-			 #        	spacing: [5,10]
+					BoxLayout:
+						size_hint: (1,.2)
+						Label:
+							text: 'Set Parameters\n      by:'
+							size: self.texture_size
+							color: (0,0,0,2)
 
-			 #        	BoxLayout:
-			 #        		size_hint: (.5,1)
+						CheckBox:
+							group: 'predict_parameter_set'
+							active: True
+						Label:
+							text: ' Manually\n(by Default)'
+							color: (0,0,0,1)
+							size: self.texture_size
 
-				
+						CheckBox:
+							id: predict_checkbox_algo
+							group: 'predict_parameter_set'
+							color: [0.2,.3,.35,2]
+							on_active: root.optimize_algo_selection()
+						Label:
+							text: 'by Optimisation'
+							color: (0,0,0,1)
+							size: self.texture_size
+
+					BoxLayout:
+						id: predict_optimize_algo_selection
+						size_hint: (1,.2)
+						canvas.before:
+							Color:
+								rgb: .5,.1,.1
+							Rectangle:
+								pos: self.pos
+								size: self.size
+
+					BoxLayout:
+						id: predict_optimize_algo_parameters
+						size_hint: (1,.5)
+						canvas.before:
+							Color:
+								rgb: .5,.2,.1
+							Rectangle:
+								pos: self.pos
+								size: self.size
+
+					BoxLayout:
+						id: predict_optimize_btn
+						size_hint: (1,.1)
+						canvas.before:
+							Color:
+								rgb: .5,.1,.9
+							Rectangle:
+								pos: self.pos
+								size: self.size
+
+				BoxLayout:
+					id: predict_output_layout
+					orientation: 'vertical'
+					size_hint: (.25,1)
+					canvas.before:
+						Color:
+							rgb: 0/255., 203/255., 91/255.
+						Rectangle:
+							pos: self.pos
+							size: self.size	
+
+					GridLayout:
+						cols: 2
+						spacing: (5,10)
+						padding: (0,40,20,20)
+
+						Label:
+							text: 'Accuracy'
+							font_size: 15
+						TextInput:
+							size_hint: (.1,None)
+							height: 5
+
+						Label:
+							text: 'precision'
+						TextInput:
+
+						Label:
+							text: 'Recall'
+						TextInput:
+
+						Label:
+							text: 'Fl-scon'
+						TextInput:
+
+						Label:
+							text: 'AUC'
+						TextInput:
+
+
+			BoxLayout:
+				id: predict_result_layout
+				size_hint: (1,.15)
+				canvas.before:
+					Color:
+						rgb: 70/255., 20/255., 91/255.
+					Rectangle:
+						pos: self.pos
+						size: self.size
+
 				Label:
-					id: predict_status
-					text: 'Happy Prediction'
+					id: predict_parameter_name
+					text: predict_dropdown_choose_parameter.text
 
 
-
+			BoxLayout:
+				id: predict_status
+				size_hint: (1,.05)
+				canvas.before:
+					Color:
+						rgb: 70/255., 198/255., 91/255.
+					Rectangle:
+						pos: self.pos
+						size: self.size
 
 	TabbedPanelItem:
 		id: tab_optimize
@@ -664,7 +826,7 @@
 
 		  #           BoxLayout:
 		  #           	size_hint:(1,0.33)
-		            	# CheckBox:
+		            	# CheckBox	:
 			            #     group: "models"
 			            #     color: (0,.5,1,1) 
 			            #     on_active: root.optimize_parameters(1, *args)   
