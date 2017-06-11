@@ -14,7 +14,6 @@
 		BoxLayout:
 			orientation: 'vertical'
 			canvas.before:
-				
 				Rectangle:
 					# source: './static/sexy_back.jpg'
 					# source: 'd.jpg'
@@ -394,53 +393,69 @@
 
 		BoxLayout:
 			orientation: 'vertical'
-
-
-
-
+			canvas.before:
+				
+				Rectangle:
+					# source: './static/sexy_back.jpg'
+					# source: 'd.jpg'
+					source: './static/back_btn.jpg'
+					size: self.size
+					pos: self.pos
+			
 			BoxLayout:
 				orientation: 'horizontal'
 				size_hint: (1,.1)
-				canvas.before:
-					Color:
-						rgb: 100/255., 149/255., 237/255.
-					Rectangle:
-						pos: self.pos
-						size: self.size
+
+				BoxLayout:
+					size_hint: (.08,1)
 
 				Label:
 					text: 'Select Classifier Model:'
 					size_hint: (0.2,1)
 					color: (0,1,1,2)
 
+				BoxLayout:
+					size_hint: (.08,1)
 					
-
-				Button:															#'predict' classifier model choose drop down menu
-					id: predict_classifier_dropdown
-					text: 'Choose Classifier'
-					font_size: 20
-					pos_hint: {'top': .7}
-					size_hint: (.2, .5)
-					on_press: root.dropDown(["Tree based", "Non-Tree based"], *args)
+				Spinner:										#'predict' classifier model choose drop down menu
+			    	id: predict_classifier_dropdown
+			        text: "Choose Classifier"
+			        values: ('Tree based','Non-Tree based')
+			        # sync_height: True
+			        # background_color: (0.784, 0.443, 0.216, 1) if self.state == 'normal' else (0.659, 0.522, 0.431, 1)
+			        color: (0.957, 0.890, 0.843, 1)
+			        font_size: 20
+					pos_hint: {'top': .7} 	
+			        size_hint: (.2, .5)
 
 				BoxLayout:
-					size_hint: (.2,1)
+					size_hint: (.3,1)
+
+			Widget:
+		        id: separator
+		        size_hint_y: None
+		        height: 3
+		        canvas:
+		            Color:
+		                rgb: 1,1,1
+		            Rectangle:
+		                pos: 0, separator.center_y
+		                size: separator.width, 2
 
 			BoxLayout:
 				orientation: 'horizontal'
 				size_hint: (1,.1)
 
-				canvas.before:
-					Color:
-						rgb: 255/255., 149/255., 237/255.
-					Rectangle:
-						pos: self.pos
-						size: self.size
+				BoxLayout:
+					size_hint: (.08,1)
 
 				Label:
 					text: 'Select Predict Parameter:'
 					size_hint: (0.2,1)
 					color: (0,1,1,2)
+
+				BoxLayout:
+					size_hint: (.08,1)
 
 					# canvas.before:
 					# 	Color:
@@ -460,16 +475,26 @@
 			    Spinner:
 			    	id: predict_dropdown_choose_parameter
 			        text: "Choose Parameter"
-			        values: root.column_names
+			        values: root.columns
 			        # background_color: (0.784, 0.443, 0.216, 1) if self.state == 'normal' else (0.659, 0.522, 0.431, 1)
 			        color: (0.957, 0.890, 0.843, 1)
 			        font_size: 20
 					pos_hint: {'top': .7} 	
 			        size_hint: (.2, .5)
 
-
 				BoxLayout:
-					size_hint: (.2, 1)		
+					size_hint: (.3,1)	
+
+			Widget:
+		        id: separator
+		        size_hint_y: None
+		        height: 3
+		        canvas:
+		            Color:
+		                rgb: 1,1,1
+		            Rectangle:
+		                pos: 0, separator.center_y
+		                size: separator.width, 2
 
 					# CheckBox:
 		   #              group: "predict_models"
@@ -551,12 +576,6 @@
 							color: (1,.2,.3,2)
 
 					BoxLayout:
-						canvas.before:
-							Color:
-								rgb: 140/255., 203/255., 133/255.
-							Rectangle:
-								pos: self.pos
-								size: self.size	
 						BoxLayout:
 							size_hint: (.1,1)
 							
@@ -566,7 +585,6 @@
 							spacing: (5,10)
 							padding: (0,40,0,20)
 								
-
 
 						BoxLayout:
 							size_hint: (.2,1)
@@ -605,43 +623,20 @@
 					BoxLayout:
 						id: predict_optimize_algo_selection
 						size_hint: (1,.2)
-						canvas.before:
-							Color:
-								rgb: .5,.1,.1
-							Rectangle:
-								pos: self.pos
-								size: self.size
+				
 
 					BoxLayout:
 						id: predict_optimize_algo_parameters
 						size_hint: (1,.5)
-						canvas.before:
-							Color:
-								rgb: .5,.2,.1
-							Rectangle:
-								pos: self.pos
-								size: self.size
 
 					BoxLayout:
 						id: predict_optimize_btn
 						size_hint: (1,.1)
-						canvas.before:
-							Color:
-								rgb: .5,.1,.9
-							Rectangle:
-								pos: self.pos
-								size: self.size
 
 				BoxLayout:
 					id: predict_output_layout
 					orientation: 'vertical'
 					size_hint: (.25,1)
-					canvas.before:
-						Color:
-							rgb: 0/255., 203/255., 91/255.
-						Rectangle:
-							pos: self.pos
-							size: self.size	
 
 					GridLayout:
 						cols: 2
@@ -652,50 +647,81 @@
 							text: 'Accuracy'
 							font_size: 15
 						TextInput:
-							size_hint: (.1,None)
-							height: 5
+							# size_hint: (None,.3)
+							# height: 5
+							disabled: True
 
 						Label:
 							text: 'precision'
 						TextInput:
+							# size_hint: (None,.2)
+							# height: 5
+							disabled: True
 
 						Label:
 							text: 'Recall'
 						TextInput:
+							# size_hint: (None,.2)
+							# height: 5
+							disabled: True
+
 
 						Label:
 							text: 'Fl-scon'
 						TextInput:
+							# size_hint: (None,.2)
+							# height: 5
+							disabled: True
 
 						Label:
 							text: 'AUC'
 						TextInput:
+							# size_hint: (None,.2)
+							# height: 5
+							disabled: True
 
 
 			BoxLayout:
 				id: predict_result_layout
 				size_hint: (1,.15)
-				canvas.before:
-					Color:
-						rgb: 70/255., 20/255., 91/255.
-					Rectangle:
-						pos: self.pos
-						size: self.size
+				orientation: 'vertical'
+				BoxLayout:
+					orientation: 'horizontal'
 
-				Label:
-					id: predict_parameter_name
-					text: predict_dropdown_choose_parameter.text
+					BoxLayout:
+
+					Label:
+						id: predict_parameter_name
+						text: predict_dropdown_choose_parameter.text
+						font_size: 20
+					BoxLayout:
+						size_hint_x: .1
+
+					TextInput:
+						disabled: True
+
+					BoxLayout:
+						size_hint_x: 1
+
+
+				BoxLayout:
+
+					BoxLayout:
+
+					Button:
+						text: 'Predict'
+						on_press: root.prediction()
+						size_hint_y: .8
+						pos_hint: {'top':.9}
+
+
+					BoxLayout:
+
 
 
 			BoxLayout:
 				id: predict_status
 				size_hint: (1,.05)
-				canvas.before:
-					Color:
-						rgb: 70/255., 198/255., 91/255.
-					Rectangle:
-						pos: self.pos
-						size: self.size
 
 	TabbedPanelItem:
 		id: tab_optimize

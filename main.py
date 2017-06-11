@@ -5,6 +5,7 @@ import pandas as pd
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.lang import Builder
 from kivy.app import App
+from kivy.base import runTouchApp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty
@@ -21,6 +22,12 @@ from kivy.uix.textinput import TextInput
 from kivy.core.window import Window
 from kivy.uix.scrollview import ScrollView
 Window.clearcolor = (78/255., 208/255., 155/255., 1)
+
+Builder.load_string('''
+<SpinnerOption>:
+    size_hint_y: None
+    height: 30
+''')
 
 from kivy.config import Config
 Config.set('graphics', 'fullscreen', 'auto')
@@ -60,9 +67,10 @@ class RootWidget(TabbedPanel):
 	file_name = StringProperty('None')
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
-	column_names = ['None']
+	column_names = []
 	number_of_columns = NumericProperty(len(column_names))
 	value = NumericProperty()
+	columns = ListProperty(column_names)
 	
 	def __init__(self, **kwargs):
 		super(RootWidget, self).__init__(**kwargs)
@@ -100,7 +108,7 @@ class RootWidget(TabbedPanel):
 			self.data = pd.read_csv(self.file_name)
 		self.column_names = list(self.data)
 		self.number_of_columns = len(self.column_names)
-		
+		self.columns = self.column_names
 		for val, column in enumerate(self.data.dtypes):
 			if column == 'object':
 				self.clean(self.data.columns[val])
@@ -110,7 +118,7 @@ class RootWidget(TabbedPanel):
 		# self.ids.set_features.clear_widgets()
 		self.ids.display_info.text = str(self.data.describe())
 		self.ids.update_status.text ='Dataset imported successfully!'
-		scroll_layout = self.ids.set_features
+		# scroll_layout = self.ids.set_features
 		print type(self.data.head())
 		
 		for sl, column in enumerate(self.column_names):
@@ -126,8 +134,8 @@ class RootWidget(TabbedPanel):
 		for column in self.column_names:
 			lab = Label(text=column, size_hint_x=None, width=100)
 			ent = TextInput(size_hint_x=None, width=200)
-			scroll_layout.add_widget(lab)
-			scroll_layout.add_widget(ent)
+			# scroll_layout.add_widget(lab)
+			# scroll_layout.add_widget(ent)
 
 
 
@@ -213,6 +221,9 @@ class RootWidget(TabbedPanel):
 		predict_graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 		print "done"
 
+	def prediction(self, *args):
+		pass
+
 	def drop_columns(self, *args):
 
 		self.ids.update_status.text ='Columns dropped successfully!'
@@ -222,7 +233,7 @@ class RootWidget(TabbedPanel):
 				self.column_names.remove(self.big_dict[checkbox][0])
 		# self.display_drop_section()
 		self.ids.layout_content.clear_widgets()
-		self.ids.set_features.clear_widgets()
+		# self.ids.set_features.clear_widgets()
 		self.number_of_columns = len(self.column_names)
 		self.big_dict = self.empty_big_dict
 		for sl, column in enumerate(self.column_names):
@@ -237,10 +248,11 @@ class RootWidget(TabbedPanel):
 		for column in self.column_names:
 			lab = Label(text=column, size_hint_x=None, width=100)
 			ent = TextInput(size_hint_x=None, width=200)
-			self.ids.set_features.add_widget(lab)
-			self.ids.set_features.add_widget(ent)
+			# self.ids.set_features.add_widget(lab)
+			# self.ids.set_features.add_widget(ent)
 
 		self.column_name = self.column_names
+		self.columns = self.column_names
 		self.ids.display_info.text = str(self.data.describe())
 
 	def dropDown(self, lists, *args):
@@ -263,7 +275,7 @@ class RootWidget(TabbedPanel):
 			label1 = Label(text='GridSearchCV')
 			checkbox2 = CheckBox(group='aglo_selection')
 			label2 = Label(text='Genetic Algorithm')
-			layout.add_widget(checkbox1)
+			layout.add_widget(checkbox1)		
 			layout.add_widget(label1)
 			layout.add_widget(checkbox2)
 			layout.add_widget(label2)
