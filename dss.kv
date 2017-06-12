@@ -8,7 +8,7 @@
 
 	TabbedPanelItem:
 		id: tab_preprocess
-		text: 'Preprocess'
+		text: 'Descriptive'
 
 
 
@@ -54,7 +54,7 @@
 				
 				Button:
 
-					text: 'Internet'
+					text: 'Internet Link/File'
 					
 					spacing: (20, 0)
 					# background_normal: './static/back_btn.jpg'
@@ -174,7 +174,7 @@
 
 							Label:
 
-								text:'Name'
+								text:'Features to be dropped'
 								halign: 'right'
 								valign: 'top'
 								size_hint:(0.4,1)
@@ -398,8 +398,6 @@
 			canvas.before:
 				
 				Rectangle:
-					# source: './static/sexy_back.jpg'
-					# source: 'd.jpg'
 					source: './static/back_btn.jpg'
 					size: self.size
 					pos: self.pos
@@ -436,12 +434,14 @@
 					size_hint: (.01,1)
 
 			    Spinner:
-			    	id: spinner_2
+			    	id: choose_classifier
+
 			    	text: '< Choose Classifier >'
 			    	pos_hint: {'top': .7}
 			        size_hint: (.2, .5)
 			    	values: ['None']
-			    	on_text: root.predict_model_parameters(spinner_2.text)
+			    	on_text: root.predict_model_parameters(choose_classifier.text)
+
 
 				BoxLayout:
 					size_hint: (.1,1)
@@ -649,13 +649,14 @@
 					BoxLayout:
 						size_hint: (1,.2)
 						Label:
-							text: 'Set Parameters\n      by:'
+							text: 'Set Parameters by:'
 							size: self.texture_size
 							color: (0,0,0,2)
 
 						CheckBox:
 							group: 'predict_parameter_set'
 							active: True
+							on_active: root.manual_parameter_selection(*args)
 						Label:
 							text: ' Manually\n(by Default)'
 							color: [.5,.6,0,1]
