@@ -7,7 +7,7 @@
 
 	TabbedPanelItem:
 		id: tab_preprocess
-		text: 'Preprocess'
+		text: 'Descriptive'
 
 
 
@@ -53,7 +53,7 @@
 				
 				Button:
 
-					text: 'Internet'
+					text: 'Internet Link/File'
 					
 					spacing: (20, 0)
 					# background_normal: './static/back_btn.jpg'
@@ -172,7 +172,7 @@
 
 							Label:
 
-								text:'Name'
+								text:'Features to be dropped'
 								halign: 'right'
 								valign: 'top'
 								size_hint:(0.4,1)
@@ -396,8 +396,6 @@
 			canvas.before:
 				
 				Rectangle:
-					# source: './static/sexy_back.jpg'
-					# source: 'd.jpg'
 					source: './static/back_btn.jpg'
 					size: self.size
 					pos: self.pos
@@ -598,7 +596,7 @@
 					BoxLayout:
 						size_hint: (1,.2)
 						Label:
-							text: 'Set Parameters\n      by:'
+							text: 'Set Parameters by:'
 							size: self.texture_size
 							color: (0,0,0,2)
 
