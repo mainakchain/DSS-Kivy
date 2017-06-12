@@ -56,7 +56,7 @@ class InternetPopup(Popup):
 		super(InternetPopup, self).__init__(**kwargs)
 		self.root = root
 
-	def send_file_name(self, *args):
+	def send_file_name(self, value, *args):
 
 		self.root.file_name = self.ids.url.text
 		self.dismiss()
@@ -69,18 +69,48 @@ class LocalFilePopup(Popup):
 
 
 	def select(self, *args):
-		self.root.file_name = args[1][0]
+			self.root.file_name = args[1][0]
+			self.dismiss()
+
+class LocalTestFilePopup(Popup):
+	test_filename = StringProperty('None')
+	def __init__(self, root, **kwargs):
+			super(LocalTestFilePopup, self).__init__(**kwargs)
+			self.root = root
+
+	def select(self, *args):
+		self.root.test_file_name = args[1][0]
+		self.test_filename = args[1][0]
+
+	def call_import(self, *args):
+		self.root.import_test_dataset()
 		self.dismiss()
+# class TestDataPopup(Popup):
+
+# 	test_file_name = StringProperty('None')
+
+# 	def __init__(self, root, **kwargs):
+# 		super(TestDataPopup, self).__init__(**kwargs)
+# 		self.root = root
+
+# 	
+
+
+	# def done(self, *args):
+	# 	self.root.test_file_name = test_file_name
+	# 	self.dismiss()
 
 class RootWidget(TabbedPanel):
 
 	file_name = StringProperty('None')
+	test_file_name = StringProperty('None')
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
 	column_names = []
 	number_of_columns = NumericProperty(len(column_names))
 	value = NumericProperty()
 	columns = ListProperty(column_names)
+
 	params = DictProperty()
 	
 	def __init__(self, **kwargs):
@@ -148,7 +178,14 @@ class RootWidget(TabbedPanel):
 			# scroll_layout.add_widget(lab)
 			# scroll_layout.add_widget(ent)
 
+	def import_test_dataset(self):
+		if self.test_file_name.endswith('zip'):
+			self.test_data = pd.read_csv(self.test_file_name, compression='zip', sep=',', quotechar='"')
+		else:
+			self.test_data = pd.read_csv(self.test_file_name)
 
+		self.ids.predict_update_status.text = 'Test Data imported successfully! '
+		
 
 	def display_drop_section(self):
 		for sl, column in enumerate(self.column_names):
@@ -359,6 +396,15 @@ class RootWidget(TabbedPanel):
 	def local_file_popup(self, *args):
 		local = LocalFilePopup(self)
 		local.open()
+
+	def local_test_file_popup(self, *args):
+		local_test = LocalTestFilePopup(self)
+		local_test.open()
+
+	def test_data_popup(self, *args):
+		test = TestDataPopup(self)
+		test.open()
+
 	def predict_model_parameters(self, value):
 		layout = self.ids.layout_predict_parameters
 

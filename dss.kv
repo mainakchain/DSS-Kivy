@@ -462,7 +462,7 @@
 				size_hint: (1,.1)
 
 				BoxLayout:
-					size_hint: (.14,1)
+					size_hint: (.2,1)
 
 				Label:
 					text: 'Select Predict Parameter:'
@@ -470,7 +470,7 @@
 					color: (0,1,1,2)
 
 				BoxLayout:
-					size_hint: (.2,1)
+					size_hint: (.1,1)
 
 					# canvas.before:
 					# 	Color:
@@ -494,10 +494,37 @@
 			        # background_color: (0.784, 0.443, 0.216, 1) if self.state == 'normal' else (0.659, 0.522, 0.431, 1)
 			        color: (0.957, 0.890, 0.843, 1)
 					pos_hint: {'top': .7} 	
-			        size_hint: (.2, .5)
+			        size_hint: (.3, .5)
+
+			    BoxLayout:
+			    	size_hint: (.1,1)
+
+			    Label: 
+			    	text: 'Input Test Data'
+					size_hint: (0.2,1)
+					color: (0,1,1,2)
 
 				BoxLayout:
-					size_hint: (.3,1)	
+					size_hint: (.01,1)
+
+				Button:
+					id: test_data_input
+					text: 'Import dataset'
+					pos_hint: {'top': .7} 	
+			        size_hint: (.23, .5)
+			        on_press: root.local_test_file_popup(*args)
+
+			    BoxLayout
+			    	size_hint: (.01,1)
+
+			    Button:
+					id: test_data_input
+					text: 'input data manually'
+					pos_hint: {'top': .7} 	
+			        size_hint: (.3, .5)
+
+				BoxLayout:
+					size_hint: (.1,1)	
 
 			Widget:
 		        id: separator
@@ -779,6 +806,10 @@
 				id: predict_status
 				size_hint: (1,.05)
 
+				Label:
+					id: predict_update_status
+					text: 'Happy Prediction!! :)'
+
 	TabbedPanelItem:
 		id: tab_optimize
 		text: 'Optimize'
@@ -965,7 +996,7 @@
 		Button:
 			size_hint_x: .1
 			text: 'Go'
-			on_press: root.send_file_name(*args) 
+			on_press: root.send_file_name(1, *args) 
 
 
 <LocalFilePopup>:
@@ -975,3 +1006,52 @@
 	BoxLayout:
 		FileChooserIconView:
 			on_selection: root.select(*args)
+
+<LocalTestFilePopup>:
+	title: 'Choose Test File'
+	size_hint: (None, None)
+	size: (600, 600)
+	BoxLayout:
+		orientation: 'vertical'
+		BoxLayout:
+			FileChooserIconView:
+				on_selection: root.select(*args)
+
+		Widget:
+	        id: separator
+	        size_hint_y: None
+	        height: 3
+	        canvas:
+	            Color:
+	                rgb: 0, 0., 0.
+	            Rectangle:
+	                pos: 0, separator.center_y
+	                size: separator.width, 2
+
+		BoxLayout:
+			size_hint: (1,.2)
+
+			BoxLayout:
+				size_hint: (.05,1)
+
+			Label:
+				text: 'File Path'
+				size_hint: (.1,1)
+
+			BoxLayout:
+				size_hint: (.01,1)
+
+			Label:
+				text: root.test_filename
+
+			Button:
+				text: 'Import'
+				size_hint: (.4,.4)
+				pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+				on_press: root.call_import()
+
+			BoxLayout
+				size_hint: (.1,1)
+
+
+
