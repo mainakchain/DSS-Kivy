@@ -1,5 +1,6 @@
 #:import Graph kivy.garden.graph.Graph
 #:import MeshLinePlot kivy.garden.graph.MeshLinePlot
+#:import ListProperty kivy.properties.ListProperty
 
 <RootWidget>:
 	do_default_tab: False
@@ -88,6 +89,7 @@
 		            Rectangle:
 		                pos: 0, separator.center_y
 		                size: separator.width, 2
+
 			BoxLayout:
 				id: layout
 				size_hint_y: .1
@@ -413,21 +415,34 @@
 					color: (0,1,1,2)
 
 				BoxLayout:
-					size_hint: (.08,1)
+					size_hint: (.01,1)
 					
 				Spinner:										#'predict' classifier model choose drop down menu
 			    	id: predict_classifier_dropdown
-			        text: "Choose Classifier"
+			        text: "< Choose Classifier type >"
 			        values: ('Tree based','Non-Tree based')
 			        # sync_height: True
 			        # background_color: (0.784, 0.443, 0.216, 1) if self.state == 'normal' else (0.659, 0.522, 0.431, 1)
 			        color: (0.957, 0.890, 0.843, 1)
-			        font_size: 20
+			  #       font_size: 20
 					pos_hint: {'top': .7} 	
 			        size_hint: (.2, .5)
+			        on_text: root.updateSubSpinner(predict_classifier_dropdown.text)
+
+
+			    BoxLayout:
+					size_hint: (.01,1)
+
+			    Spinner:
+			    	id: choose_classifier
+			    	text: '< Choose Classifier >'
+			    	pos_hint: {'top': .7}
+			        size_hint: (.2, .5)
+			    	values: ['None']
+			    	on_text: root.predict_model_parameters(choose_classifier.text)
 
 				BoxLayout:
-					size_hint: (.3,1)
+					size_hint: (.1,1)
 
 			Widget:
 		        id: separator
@@ -445,7 +460,7 @@
 				size_hint: (1,.1)
 
 				BoxLayout:
-					size_hint: (.08,1)
+					size_hint: (.14,1)
 
 				Label:
 					text: 'Select Predict Parameter:'
@@ -453,7 +468,7 @@
 					color: (0,1,1,2)
 
 				BoxLayout:
-					size_hint: (.08,1)
+					size_hint: (.2,1)
 
 					# canvas.before:
 					# 	Color:
@@ -476,7 +491,6 @@
 			        values: root.columns
 			        # background_color: (0.784, 0.443, 0.216, 1) if self.state == 'normal' else (0.659, 0.522, 0.431, 1)
 			        color: (0.957, 0.890, 0.843, 1)
-			        font_size: 20
 					pos_hint: {'top': .7} 	
 			        size_hint: (.2, .5)
 
@@ -586,8 +600,18 @@
 
 						BoxLayout:
 							size_hint: (.2,1)
-							
-					
+				
+					Widget:
+				        id: separator
+				        size_hint_y: None
+				        height: 1
+				        canvas:
+				            Color:
+				                rgb: 1, 1., 1.
+				            Rectangle:
+				                pos: self.pos
+				                size: self.size
+
 				BoxLayout:
 					id: predict_optimize_layout
 					orientation: 'vertical'
@@ -603,19 +627,20 @@
 						CheckBox:
 							group: 'predict_parameter_set'
 							active: True
+							on_active: root.manual_parameter_selection(*args)
 						Label:
 							text: ' Manually\n(by Default)'
-							color: (0,0,0,1)
+							color: [.5,.6,0,1]
 							size: self.texture_size
 
 						CheckBox:
 							id: predict_checkbox_algo
 							group: 'predict_parameter_set'
-							color: [0.2,.3,.35,2]
+							color: ListProperty([1, .2, .3, 1])
 							on_active: root.optimize_algo_selection()
 						Label:
 							text: 'by Optimisation'
-							color: (0,0,0,1)
+							color: [.5,.6,0,1]
 							size: self.texture_size
 
 					BoxLayout:
@@ -630,6 +655,16 @@
 					BoxLayout:
 						id: predict_optimize_btn
 						size_hint: (1,.1)
+				# Widget:
+			 #        id: separator
+			 #        size_hint_y: None
+			 #        height: 1
+			 #        canvas:
+			 #            Color:
+			 #                rgb: 1, 1., 1.
+			 #            Rectangle:
+			 #                pos: self.pos
+			 #                size: self.size
 
 				BoxLayout:
 					id: predict_output_layout
@@ -678,6 +713,17 @@
 							# height: 5
 							disabled: True
 
+			Widget:
+		        id: separator
+		        size_hint_y: None
+		        height: 3
+		        canvas:
+		            Color:
+		                rgb: 1,1,1
+		            Rectangle:
+		                pos: 0, separator.center_y
+		                size: separator.width, 2
+
 
 			BoxLayout:
 				id: predict_result_layout
@@ -715,6 +761,16 @@
 
 					BoxLayout:
 
+			Widget:
+		        id: separator
+		        size_hint_y: None
+		        height: 3
+		        canvas:
+		            Color:
+		                rgb: 1,1,1
+		            Rectangle:
+		                pos: 0, separator.center_y
+		                size: separator.width, 2
 
 
 			BoxLayout:
