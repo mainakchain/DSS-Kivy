@@ -468,6 +468,7 @@
 					text: 'Select Predict Parameter:'
 					size_hint: (0.2,1)
 					color: (0,1,1,2)
+					width: self.texture_size[0]
 
 				BoxLayout:
 					size_hint: (.1,1)
@@ -503,13 +504,15 @@
 			    	text: 'Input Test Data'
 					size_hint: (0.2,1)
 					color: (0,1,1,2)
+					width: self.texture_size[0]
 
 				BoxLayout:
-					size_hint: (.01,1)
+					size_hint: (.03,1)
 
 				Button:
 					id: test_data_input
 					text: 'Import dataset'
+					text_width: self.texture_size[0]
 					pos_hint: {'top': .7} 	
 			        size_hint: (.23, .5)
 			        on_press: root.local_test_file_popup(*args)
@@ -522,6 +525,7 @@
 					text: 'input data manually'
 					pos_hint: {'top': .7} 	
 			        size_hint: (.3, .5)
+			        on_press: root.manual_input_popup(*args)
 
 				BoxLayout:
 					size_hint: (.1,1)	
@@ -665,7 +669,7 @@
 							id: predict_checkbox_algo
 							group: 'predict_parameter_set'
 							color: ListProperty([1, .2, .3, 1])
-							on_active: root.optimize_algo_selection()
+							on_active: root.optimize_algo_selection(*args)
 						Label:
 							text: 'by Optimisation'
 							color: [.5,.6,0,1]
@@ -677,8 +681,24 @@
 				
 
 					BoxLayout:
-						id: predict_optimize_algo_parameters
+						id: predict_optimize_algo_parameters_box
 						size_hint: (1,.5)
+
+						ScrollView:
+							do_scroll_y: True
+							do_scroll_x: False
+
+							GridLayout:
+								id: predict_optimize_algo_parameters
+								height: self.minimum_height
+								cols: 3
+								size_hint_y: None
+								spacing: (15, 20)
+								padding: [5, 5, 5, 5]
+
+
+
+
 
 					BoxLayout:
 						id: predict_optimize_btn
@@ -728,7 +748,7 @@
 
 
 						Label:
-							text: 'Fl-scon'
+							text: 'F1-score'
 						TextInput:
 							# size_hint: (None,.2)
 							# height: 5
@@ -1008,6 +1028,7 @@
 
 <LocalTestFilePopup>:
 	title: 'Choose Test File'
+	title_align: 'center'
 	size_hint: (None, None)
 	size: (600, 600)
 	BoxLayout:
@@ -1017,15 +1038,15 @@
 				on_selection: root.select(*args)
 
 		Widget:
-	        id: separator
+	        id: separator1
 	        size_hint_y: None
 	        height: 3
 	        canvas:
 	            Color:
-	                rgb: 0, 0., 0.
+	                rgb: 1, 1, 1
 	            Rectangle:
-	                pos: 0, separator.center_y
-	                size: separator.width, 2
+	                pos: separator1.x, separator1.center_y
+	                size: separator1.width, 2
 
 		BoxLayout:
 			size_hint: (1,.2)
@@ -1051,6 +1072,69 @@
 
 			BoxLayout
 				size_hint: (.1,1)
+
+<ManualInputPopup>:
+	title: 'Supply test values'
+	title_align: 'center'
+	title_size: 20
+	size_hint: (None, None)
+	size: (600, 600)
+	BoxLayout:
+		orientation: 'vertical'
+
+		BoxLayout:
+			size_hint: (1,.2)
+			
+
+			Button:
+				text: 'Input Data'
+				size_hint: (.4,.4)
+				pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+				on_press: root.populate()
+
+			
+
+			Button:
+				text: 'Done'
+				size_hint: (.4,.4)
+				pos_hint: {'top': 0.5 + self.size_hint[1]/2}
+				on_press: root.done()
+
+			
+		Widget:
+	        id: separator1
+	        size_hint_y: None
+	        height: 3
+	        canvas:
+	            Color:
+	                rgb: 1, 1, 1
+	            Rectangle:
+	                pos: separator1.x, separator1.center_y
+	                size: separator1.width, 2
+
+	    BoxLayout:
+
+		    
+
+		    ScrollView:
+				id: manual_test_scroll
+				do_scroll_y: True
+				do_scroll_x: False
+
+				GridLayout:
+					id: layout_manual_test_data
+					height: self.minimum_height
+					cols: 2
+					size_hint_y: None
+					row_default_height: '50dp'
+					spacing: (15, 20)
+					padding: [5, 5, 5, 5]
+
+			
+
+				
+				
+
 
 
 
