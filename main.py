@@ -21,7 +21,16 @@ from kivy.uix.dropdown import DropDown
 from kivy.uix.textinput import TextInput
 from kivy.core.window import Window
 from kivy.uix.scrollview import ScrollView
-from sklearn.neural_network import MLPClassifier				#ANN 
+
+				 
+from sklearn.svm import SVC # SVM
+from sklearn.ensemble import RandomForestClassifier #RandomForest
+from sklearn.neighbors import KNeighborsClassifier #KNeighbors
+from sklearn.neural_network import MLPClassifier #ANN
+
+
+
+
 Window.clearcolor = (78/255., 208/255., 155/255., 1)
 
 Builder.load_string('''
@@ -72,6 +81,7 @@ class RootWidget(TabbedPanel):
 	number_of_columns = NumericProperty(len(column_names))
 	value = NumericProperty()
 	columns = ListProperty(column_names)
+	params = DictProperty()
 	
 	def __init__(self, **kwargs):
 		super(RootWidget, self).__init__(**kwargs)
@@ -223,7 +233,55 @@ class RootWidget(TabbedPanel):
 		print "done"
 
 	def prediction(self, *args):
-		pass
+		classifier_type = self.ids.choose_classifier
+		params = self.choose_classifier(classifier_type)
+
+		if classifier_type == 'SVM':
+			C = float(params['C'])
+			kernel = params['kernel']
+			degree = int(params['degree'])
+			gamma = float(params['gamma'])
+			tol = float(params['tol'])
+			coef0 = float(params['coef0'])
+
+			model = SVC(C=C, kernel=kernel, degree=degree, gamma=gamma, tol=tol, coef0=coef0)
+
+		if classifier_type == 'ANN':
+			hidden_layer_sizes = tuple(params['hidden_layer_sizes'])
+			max_iter = int(params['max_iter'])
+			activation = params['activation']
+			solver = params['solver']
+			learning_rate = params['learning_rate']
+			momentum = params['momentum']
+
+			model = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, max_iter=max_iter, activation=activation, solver=solver, learning_rate=learning_rate, momentum=momentum)
+
+		if classifier_type == 'Random Forest':
+			n_estimators = int(params['n_estimators'])
+			min_samples_leaf = float(params['min_samples_leaf'])
+			max_depth = int(params['max_depth'])
+			min_samples_split = float(params['min_samples_split'])
+			min_weight_fraction_leaf = float(params['min_weight_fraction_leaf'])
+			max_leaf_nodes = int(params['max_leaf_nodes'])
+
+			model = RandomForestClassifier(n_estimators=n_estimators, min_samples_leaf=min_samples_leaf, max_depth=max_depth, min_samples_split=min_samples_split, min_weight_fraction_leaf=min_weight_fraction_leaf, max_leaf_nodes=max_leaf_nodes)
+
+
+		if classifier_type == 'k-NN':
+			n_neighbors = int(params['n_neighbors'])
+			p = int(params['p'])
+			leaf_size = int(params['leaf_size'])
+			n_jobs = int(params['n_jobs'])
+			algorithm = params['algorithm']
+			weights = params['weights']
+
+			model = KNeighborsClassifier(n_neighbors=n_neighbors, p=p, leaf_size=leaf_size, n_jobs=n_jobs, algorithm=algorithm, weights=weights)
+
+
+
+
+
+
 
 	def drop_columns(self, *args):
 
@@ -272,9 +330,9 @@ class RootWidget(TabbedPanel):
 		layout = self.ids.predict_optimize_algo_selection
 		if check.active == True:
 			layout.clear_widgets()
-			checkbox1 = CheckBox(group='aglo_selection')
+			checkbox1 = CheckBox(group='algo_selection')
 			label1 = Label(text='GridSearchCV')
-			checkbox2 = CheckBox(group='aglo_selection')
+			checkbox2 = CheckBox(group='algo_selection')
 			label2 = Label(text='Genetic Algorithm')
 			layout.add_widget(checkbox1)		
 			layout.add_widget(label1)
@@ -283,13 +341,16 @@ class RootWidget(TabbedPanel):
 		else:
 			layout.clear_widgets()
 
+	def manual_parameter_selection(self, *args):
+		pass
+
 	def updateSubSpinner(self, text):
-		self.ids.spinner_2.text = '< Select >'
+		self.ids.choose_classifier.text = '< Select >'
 
 		if text == 'Tree based':
-			self.ids.spinner_2.values = ['Random Forest']
+			self.ids.choose_classifier.values = ['Random Forest']
 		if text == 'Non-Tree based':
-			self.ids.spinner_2.values = ['SVM','ANN','k-NN']
+			self.ids.choose_classifier.values = ['SVM','ANN','k-NN']
 
 	def internet_popup(self, *args):
 		internet = InternetPopup(self)
@@ -302,41 +363,50 @@ class RootWidget(TabbedPanel):
 		layout = self.ids.layout_predict_parameters
 
 		if value=='SVM':
+			self.params = DictProperty()
+
 			layout.clear_widgets()
 			c_label = Label(text='C', color=(1,1,1,2))
 			c_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='1.0')
 			layout.add_widget(c_label)
 			layout.add_widget(c_input)
+			self.params['C'] = c_input.text
 
 			tol_label = Label(text='tol', color=(1,1,1,2))
 			tol_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='0.049787')
 			layout.add_widget(tol_label)
 			layout.add_widget(tol_input)
+			self.params['tol'] = tol_input.text
 
 			degree_label = Label(text='degree', color=(1,1,1,2))
 			degree_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='3')
 			layout.add_widget(degree_label)
 			layout.add_widget(degree_input)
+			self.params['degree'] = degree_input.text
 
 			gamma_label = Label(text='gamma', color=(1,1,1,2))
 			gamma_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='auto')
 			layout.add_widget(gamma_label)
 			layout.add_widget(gamma_input)
+			self.params['gamma'] = gamma_input.text
 
 			coef0_label = Label(text='coef0', color=(1,1,1,2))
 			coef0_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='0.0')
 			layout.add_widget(coef0_label)
 			layout.add_widget(coef0_input)
+			self.params['coef0'] = coef0_input.text
 
 			kernel_label = Label(text = 'kernel', color=(1,1,1,2))
 			kernel_spinner = Spinner(text='rbf',values=['linear','poly','sigmoid','precomputed','rbf'])
 			layout.add_widget(kernel_label)
 			layout.add_widget(kernel_spinner)
+			self.params['kernel'] = kernel_spinner.text
+
 
 		if value=='Random Forest' :
 			layout.clear_widgets()
@@ -345,36 +415,47 @@ class RootWidget(TabbedPanel):
                                    size_hint=(None, None), height=30,width=140, text='10')
 			layout.add_widget(n_estimators_label)
 			layout.add_widget(n_estimators_input)
+			self.params['n_estimators'] = n_estimators_input.text
+
+
 
 			min_samples_leaf_label = Label(text='min samples\n    leaf', color=(1,1,1,2),size=self.parent.size)
 			min_samples_leaf_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='1')
 			layout.add_widget(min_samples_leaf_label)
 			layout.add_widget(min_samples_leaf_input)
+			self.params['min_samples_leaf'] = min_samples_leaf_input.text
+
 
 			max_depth_label = Label(text='max depth', color=(1,1,1,2),size=self.parent.size)
 			max_depth_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='None')
 			layout.add_widget(max_depth_label)
 			layout.add_widget(max_depth_input)
+			self.params['max_depth'] = max_depth_input.text
 
 			min_samples_split_label = Label(text='min samples\n     split', color=(1,1,1,2),size=self.parent.size)
 			min_samples_split_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='2')
 			layout.add_widget(min_samples_split_label)
 			layout.add_widget(min_samples_split_input)
+			self.params['min_samples_split'] = min_samples_split_input.text
 
 			min_weight_fraction_leaf_label = Label(text='min weight\nfraction leaf', color=(1,1,1,2),size=self.parent.size)
 			min_weight_fraction_leaf_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='0.0')
 			layout.add_widget(min_weight_fraction_leaf_label)
 			layout.add_widget(min_weight_fraction_leaf_input)
+			self.params['min_weight_fraction_leaf'] = min_weight_fraction_leaf_input.text
 
 			max_leaf_nodes_label = Label(text='max leaf\n  nodes', color=(1,1,1,2),size=self.parent.size)
 			max_leaf_nodes_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='None')
 			layout.add_widget(max_leaf_nodes_label)
 			layout.add_widget(max_leaf_nodes_input)
+			self.params['max_leaf_nodes'] = max_leaf_nodes_input.text
+
+
 
 
 
@@ -385,34 +466,42 @@ class RootWidget(TabbedPanel):
                                    size_hint=(None, None), height=30,width=140, text='5')
 			layout.add_widget(n_neighbours_label)
 			layout.add_widget(n_neighbours_input)
+			self.params['n_nighbors'] = n_nighbors_input.text
 
 			p_label = Label(text='p', color=(1,1,1,2))
 			p_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='0.0')
 			layout.add_widget(p_label)
 			layout.add_widget(p_input)
+			self.params['p'] = p_input.text
 
 			leaf_size_label = Label(text='leaf size', color=(1,1,1,2))
 			leaf_size_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='30')
 			layout.add_widget(leaf_size_label)
 			layout.add_widget(leaf_size_input)
+			self.params['leaf_size'] = leaf_size_input.text
 
 			n_jobs_label = Label(text='n jobs', color=(1,1,1,2))
 			n_jobs_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='1')
 			layout.add_widget(n_jobs_label)
 			layout.add_widget(n_jobs_input)
+			self.params['n_jobs'] = n_jobs_input.text
 
 			algorithm_label = Label(text = 'algorithm', color=(1,1,1,2))
 			algorithm_spinner = Spinner(text='auto',values=['ball tree','kd tree','brute','auto'])
 			layout.add_widget(algorithm_label)
 			layout.add_widget(algorithm_spinner)
+			self.params['algorithm'] = algorithm_input.text
+
 
 			weights_label = Label(text = 'weights', color=(1,1,1,2))
 			weights_spinner = Spinner(text='uniform', values=['rbf', 'distance','uniform'])
 			layout.add_widget(weights_label)
 			layout.add_widget(weights_spinner)
+			self.params['weights'] = weights_input.text
+
 
 
 
@@ -424,27 +513,39 @@ class RootWidget(TabbedPanel):
                                    size_hint=(None, None), height=30,width=140, text='100')
 			layout.add_widget(hidden_layer_sizes_label)
 			layout.add_widget(hidden_layer_sizes_input)
+			self.params['hidden_layer_sizes'] = hidden_layer_sizes_input.text
+
 
 			max_iter_label = Label(text='max iter', color=(1,1,1,2))
 			max_iter_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='200')
 			layout.add_widget(max_iter_label)
 			layout.add_widget(max_iter_input)
+			self.params['max_iter'] = max_iter_input.text
+
 
 			activation_label = Label(text = 'activation', color=(1,1,1,2))
 			activation_spinner = Spinner(text = 'relu', values=['identity', 'logistic', 'tanh', 'relu'])
 			layout.add_widget(activation_label)
 			layout.add_widget(activation_spinner)
+			self.params['n_estimators'] = activation_input.text
+
 
 			solver_label = Label(text = 'solver', color=(1,1,1,2))
 			solver_spinner = Spinner(text = 'adam', values=['lbfgs', 'sgd', 'adam'])
 			layout.add_widget(solver_label)
 			layout.add_widget(solver_spinner)
+			self.params['solver'] = solver_input.text
+
+
 
 			learning_rate_label = Label(text = 'learning rate', color=(1,1,1,2))
 			learning_rate_spinner = Spinner(text = 'constant', values= ['adaptive', 'invscaling','constant'])
 			layout.add_widget(learning_rate_label)
 			layout.add_widget(learning_rate_spinner)
+			self.params['learning_rate'] = learning_rate_input.text
+
+
 
 			# if solver_spinner.text == 'sgd':
 			momentum_label = Label(text='momentum', color=(1,1,1,2))
@@ -452,7 +553,10 @@ class RootWidget(TabbedPanel):
                                    size_hint=(None, None), height=30,width=140, text='.9')
 			layout.add_widget(momentum_label)
 			layout.add_widget(momentum_input)
-			
+			self.params['momentum'] = momentum_input.text
+
+		return self.params
+
 				
 
 	# def predict_model_parameters(self, value):
@@ -619,6 +723,9 @@ class RootWidget(TabbedPanel):
 	# 		weights_mainbutton.bind(on_press=lambda x:self.dropDown(['rbf','uniform', 'distance'], weights_mainbutton))
 	# 		layout.add_widget(weights_label)
 	# 		layout.add_widget(weights_mainbutton)
+
+
+
 
 
 
