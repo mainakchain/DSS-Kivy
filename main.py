@@ -59,34 +59,37 @@ class LocalFilePopup(Popup):
 		self.root = root
 
 
-	def select(self, value, *args):
-		if value == 1:
+	def select(self, *args):
 			self.root.file_name = args[1][0]
 			self.dismiss()
-		else:
-			self.root.test_file_name = args[1][0]
-			self.dismiss()
 
-class TestDataPopup(Popup):
-
-	test_file_name = StringProperty('None')
-
+class LocalTestFilePopup(Popup):
+	test_filename = StringProperty('None')
 	def __init__(self, root, **kwargs):
-		super(TestDataPopup, self).__init__(**kwargs)
-		self.root = root
+			super(LocalTestFilePopup, self).__init__(**kwargs)
+			self.root = root
 
-	def import_test_dataset():
-		if self.test_file_name.endswith('zip'):
-			self.test_data = pd.read_csv(self.test_file_name, compression='zip', sep=',', quotechar='"')
-		else:
-			self.test_data = pd.read_csv(self.test_file_name)
+	def select(self, *args):
+		self.root.test_file_name = args[1][0]
+		self.test_filename = args[1][0]
 
-		self.root.ids.predict_update_status.text = 'Test Data imported successfully! '
-
-
-	def done(self, *args):
-		self.root.test_file_name = test_file_name
+	def call_import(self, *args):
+		self.root.import_test_dataset()
 		self.dismiss()
+# class TestDataPopup(Popup):
+
+# 	test_file_name = StringProperty('None')
+
+# 	def __init__(self, root, **kwargs):
+# 		super(TestDataPopup, self).__init__(**kwargs)
+# 		self.root = root
+
+# 	
+
+
+	# def done(self, *args):
+	# 	self.root.test_file_name = test_file_name
+	# 	self.dismiss()
 
 class RootWidget(TabbedPanel):
 
@@ -165,9 +168,14 @@ class RootWidget(TabbedPanel):
 			# scroll_layout.add_widget(lab)
 			# scroll_layout.add_widget(ent)
 
-	
+	def import_test_dataset(self):
+		if self.test_file_name.endswith('zip'):
+			self.test_data = pd.read_csv(self.test_file_name, compression='zip', sep=',', quotechar='"')
+		else:
+			self.test_data = pd.read_csv(self.test_file_name)
 
-
+		self.ids.predict_update_status.text = 'Test Data imported successfully! '
+		
 
 	def display_drop_section(self):
 		for sl, column in enumerate(self.column_names):
@@ -327,6 +335,10 @@ class RootWidget(TabbedPanel):
 	def local_file_popup(self, *args):
 		local = LocalFilePopup(self)
 		local.open()
+
+	def local_test_file_popup(self, *args):
+		local_test = LocalTestFilePopup(self)
+		local_test.open()
 
 	def test_data_popup(self, *args):
 		test = TestDataPopup(self)
