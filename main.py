@@ -47,7 +47,7 @@ class InternetPopup(Popup):
 		super(InternetPopup, self).__init__(**kwargs)
 		self.root = root
 
-	def send_file_name(self, *args):
+	def send_file_name(self, value, *args):
 
 		self.root.file_name = self.ids.url.text
 		self.dismiss()
@@ -59,19 +59,46 @@ class LocalFilePopup(Popup):
 		self.root = root
 
 
-	def select(self, *args):
-		self.root.file_name = args[1][0]
+	def select(self, value, *args):
+		if value == 1:
+			self.root.file_name = args[1][0]
+			self.dismiss()
+		else:
+			self.root.test_file_name = args[1][0]
+			self.dismiss()
+
+class TestDataPopup(Popup):
+
+	test_file_name = StringProperty('None')
+
+	def __init__(self, root, **kwargs):
+		super(TestDataPopup, self).__init__(**kwargs)
+		self.root = root
+
+	def import_test_dataset():
+		if self.test_file_name.endswith('zip'):
+			self.test_data = pd.read_csv(self.test_file_name, compression='zip', sep=',', quotechar='"')
+		else:
+			self.test_data = pd.read_csv(self.test_file_name)
+
+		self.root.ids.predict_update_status.text = 'Test Data imported successfully! '
+
+
+	def done(self, *args):
+		self.root.test_file_name = test_file_name
 		self.dismiss()
 
 class RootWidget(TabbedPanel):
 
 	file_name = StringProperty('None')
+	test_file_name = StringProperty('None')
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
 	column_names = []
 	number_of_columns = NumericProperty(len(column_names))
 	value = NumericProperty()
 	columns = ListProperty(column_names)
+
 	
 	def __init__(self, **kwargs):
 		super(RootWidget, self).__init__(**kwargs)
@@ -137,6 +164,8 @@ class RootWidget(TabbedPanel):
 			ent = TextInput(size_hint_x=None, width=200)
 			# scroll_layout.add_widget(lab)
 			# scroll_layout.add_widget(ent)
+
+	
 
 
 
@@ -298,6 +327,11 @@ class RootWidget(TabbedPanel):
 	def local_file_popup(self, *args):
 		local = LocalFilePopup(self)
 		local.open()
+
+	def test_data_popup(self, *args):
+		test = TestDataPopup(self)
+		test.open()
+
 	def predict_model_parameters(self, value):
 		layout = self.ids.layout_predict_parameters
 
