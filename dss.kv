@@ -435,11 +435,13 @@
 
 			    Spinner:
 			    	id: choose_classifier
+
 			    	text: '< Choose Classifier >'
 			    	pos_hint: {'top': .7}
 			        size_hint: (.2, .5)
 			    	values: ['None']
 			    	on_text: root.predict_model_parameters(choose_classifier.text)
+
 
 				BoxLayout:
 					size_hint: (.1,1)

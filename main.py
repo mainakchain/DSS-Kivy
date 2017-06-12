@@ -30,6 +30,7 @@ from sklearn.neural_network import MLPClassifier #ANN
 
 
 
+
 Window.clearcolor = (78/255., 208/255., 155/255., 1)
 
 Builder.load_string('''
@@ -363,6 +364,7 @@ class RootWidget(TabbedPanel):
 
 		if value=='SVM':
 			self.params = DictProperty()
+
 			layout.clear_widgets()
 			c_label = Label(text='C', color=(1,1,1,2))
 			c_input = TextInput(multiline=False,
@@ -416,6 +418,7 @@ class RootWidget(TabbedPanel):
 			self.params['n_estimators'] = n_estimators_input.text
 
 
+
 			min_samples_leaf_label = Label(text='min samples\n    leaf', color=(1,1,1,2),size=self.parent.size)
 			min_samples_leaf_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='1')
@@ -451,6 +454,7 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(max_leaf_nodes_label)
 			layout.add_widget(max_leaf_nodes_input)
 			self.params['max_leaf_nodes'] = max_leaf_nodes_input.text
+
 
 
 
@@ -491,11 +495,13 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(algorithm_spinner)
 			self.params['algorithm'] = algorithm_input.text
 
+
 			weights_label = Label(text = 'weights', color=(1,1,1,2))
 			weights_spinner = Spinner(text='uniform', values=['rbf', 'distance','uniform'])
 			layout.add_widget(weights_label)
 			layout.add_widget(weights_spinner)
 			self.params['weights'] = weights_input.text
+
 
 
 
@@ -509,6 +515,7 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(hidden_layer_sizes_input)
 			self.params['hidden_layer_sizes'] = hidden_layer_sizes_input.text
 
+
 			max_iter_label = Label(text='max iter', color=(1,1,1,2))
 			max_iter_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='200')
@@ -516,11 +523,13 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(max_iter_input)
 			self.params['max_iter'] = max_iter_input.text
 
+
 			activation_label = Label(text = 'activation', color=(1,1,1,2))
 			activation_spinner = Spinner(text = 'relu', values=['identity', 'logistic', 'tanh', 'relu'])
 			layout.add_widget(activation_label)
 			layout.add_widget(activation_spinner)
 			self.params['n_estimators'] = activation_input.text
+
 
 			solver_label = Label(text = 'solver', color=(1,1,1,2))
 			solver_spinner = Spinner(text = 'adam', values=['lbfgs', 'sgd', 'adam'])
@@ -529,11 +538,13 @@ class RootWidget(TabbedPanel):
 			self.params['solver'] = solver_input.text
 
 
+
 			learning_rate_label = Label(text = 'learning rate', color=(1,1,1,2))
 			learning_rate_spinner = Spinner(text = 'constant', values= ['adaptive', 'invscaling','constant'])
 			layout.add_widget(learning_rate_label)
 			layout.add_widget(learning_rate_spinner)
 			self.params['learning_rate'] = learning_rate_input.text
+
 
 
 			# if solver_spinner.text == 'sgd':
@@ -545,6 +556,7 @@ class RootWidget(TabbedPanel):
 			self.params['momentum'] = momentum_input.text
 
 		return self.params
+
 				
 
 	# def predict_model_parameters(self, value):
@@ -711,6 +723,7 @@ class RootWidget(TabbedPanel):
 	# 		weights_mainbutton.bind(on_press=lambda x:self.dropDown(['rbf','uniform', 'distance'], weights_mainbutton))
 	# 		layout.add_widget(weights_label)
 	# 		layout.add_widget(weights_mainbutton)
+
 
 
 
