@@ -709,6 +709,7 @@
 							text: 'Accuracy'
 							font_size: 15
 						TextInput:
+							id: accuracy
 							# size_hint: (None,.3)
 							# height: 5
 							disabled: True
@@ -716,6 +717,7 @@
 						Label:
 							text: 'precision'
 						TextInput:
+							id: precision
 							# size_hint: (None,.2)
 							# height: 5
 							disabled: True
@@ -723,14 +725,16 @@
 						Label:
 							text: 'Recall'
 						TextInput:
+							id: recall
 							# size_hint: (None,.2)
 							# height: 5
 							disabled: True
 
 
 						Label:
-							text: 'Fl-scon'
+							text: 'Fl-score'
 						TextInput:
+							id: f1
 							# size_hint: (None,.2)
 							# height: 5
 							disabled: True
@@ -738,6 +742,7 @@
 						Label:
 							text: 'AUC'
 						TextInput:
+							id: auc_roc
 							# size_hint: (None,.2)
 							# height: 5
 							disabled: True
