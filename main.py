@@ -113,7 +113,7 @@ class ManualInputPopup(Popup):
 			layout.add_widget(TextInput(multiline=False,size_hint_y=None,height=30))
 
 	def done(self, *args):
-		if (self.root.test_data != ''):
+		if (self.root.test_data != []):
 			self.root.ids.predict_update_status.text = 'Test Data imported successfully! '
 		else:
 			self.root.ids.predict_update_status.text = 'Test Data empty! Please input data!'
@@ -130,9 +130,10 @@ class RootWidget(TabbedPanel):
 	number_of_columns = NumericProperty(len(column_names))
 	value = NumericProperty()
 	columns = ListProperty(column_names)
-	data = ''
-	test_data = ''
+	data = []
+	test_data = []
 	checkbox1 = CheckBox(group='algo_selection')
+	model = ObjectProperty()
 
 	params = DictProperty()
 	
@@ -293,19 +294,33 @@ class RootWidget(TabbedPanel):
 		predict_graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 		print "done"
 
+	def cross_validate(self, *args):
+		classifier = self.ids.choose_classifier.text
+		print self.model
+		self.model.fit(self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text])
+		accuracy = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='accuracy').mean()
+		precision = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='average_precision').mean()
+		f1_score = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='f1').mean()
+		recall = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='recall').mean()
+		roc_auc = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='roc_auc').mean()
+		self.ids.accuracy.text = str(accuracy)
+		self.ids.precision.text = str(precision)
+		self.ids.f1.text = str(f1_score)
+		self.ids.recall.text = str(recall)
+		self.ids.auc_roc.text = str(roc_auc)
+
 	def prediction(self):
-		classifier_type = self.ids.choose_classifier
+		classifier_type = self.ids.choose_classifier.text
 		params = self.predict_model_parameters(classifier_type)
-		model = ''
 		if classifier_type == 'SVM':
 			C = float(params['C'])
 			kernel = params['kernel']
 			degree = int(params['degree'])
-			gamma = float(params['gamma'])
+			# gamma = float(params['gamma'])
 			tol = float(params['tol'])
 			coef0 = float(params['coef0'])
 
-			model = SVC(C=C, kernel=kernel, degree=degree, gamma=gamma, tol=tol, coef0=coef0)
+			self.model = SVC(C=C, kernel=kernel, degree=degree, tol=tol, coef0=coef0)
 
 		if classifier_type == 'ANN':
 			hidden_layer_sizes = tuple(params['hidden_layer_sizes'])
@@ -315,7 +330,7 @@ class RootWidget(TabbedPanel):
 			learning_rate = params['learning_rate']
 			momentum = params['momentum']
 
-			model = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, max_iter=max_iter, activation=activation, solver=solver, learning_rate=learning_rate, momentum=momentum)
+			self.model = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, max_iter=max_iter, activation=activation, solver=solver, learning_rate=learning_rate, momentum=momentum)
 
 		if classifier_type == 'Random Forest':
 			n_estimators = int(params['n_estimators'])
@@ -325,7 +340,7 @@ class RootWidget(TabbedPanel):
 			min_weight_fraction_leaf = float(params['min_weight_fraction_leaf'])
 			max_leaf_nodes = int(params['max_leaf_nodes'])
 
-			model = RandomForestClassifier(n_estimators=n_estimators, min_samples_leaf=min_samples_leaf, max_depth=max_depth, min_samples_split=min_samples_split, min_weight_fraction_leaf=min_weight_fraction_leaf, max_leaf_nodes=max_leaf_nodes)
+			self.model = RandomForestClassifier(n_estimators=n_estimators, min_samples_leaf=min_samples_leaf, max_depth=max_depth, min_samples_split=min_samples_split, min_weight_fraction_leaf=min_weight_fraction_leaf, max_leaf_nodes=max_leaf_nodes)
 
 
 		if classifier_type == 'k-NN':
@@ -336,9 +351,10 @@ class RootWidget(TabbedPanel):
 			algorithm = params['algorithm']
 			weights = params['weights']
 
-			model = KNeighborsClassifier(n_neighbors=n_neighbors, p=p, leaf_size=leaf_size, n_jobs=n_jobs, algorithm=algorithm, weights=weights)
+			self.model = KNeighborsClassifier(n_neighbors=n_neighbors, p=p, leaf_size=leaf_size, n_jobs=n_jobs, algorithm=algorithm, weights=weights)
+		print self.model
+		print classifier_type
 
-		return model
 
 
 	def drop_columns(self, *args):

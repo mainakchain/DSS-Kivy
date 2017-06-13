@@ -767,6 +767,11 @@
 							# size_hint: (None,.2)
 							# height: 5
 							disabled: True
+					BoxLayout:
+						size_hint_y: .1
+						Button:
+							text: 'Cross-Validate'
+							on_press: root.cross_validate(*args)
 
 			Widget:
 		        id: separator
