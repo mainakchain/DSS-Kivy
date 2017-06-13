@@ -296,13 +296,19 @@ class RootWidget(TabbedPanel):
 
 	def cross_validate(self, *args):
 		classifier = self.ids.choose_classifier.text
+		roc_auc = 'Multiclass label'
+		precision = 'Multiclass label'
+		recall = 'Multiclass label'
 		print self.model
 		self.model.fit(self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text])
 		accuracy = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='accuracy').mean()
-		precision = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='average_precision').mean()
-		f1_score = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='f1').mean()
-		recall = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='recall').mean()
-		roc_auc = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='roc_auc').mean()
+		if len(self.data[self.ids.predict_dropdown_choose_parameter.text].unique()) < 3:
+			precision = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='average_precision').mean()
+		f1_score = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='f1_weighted').mean()
+		if len(self.data[self.ids.predict_dropdown_choose_parameter.text].unique()) < 3:
+			recall = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='recall').mean()
+		if len(self.data[self.ids.predict_dropdown_choose_parameter.text].unique()) < 3:
+			roc_auc = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='roc_auc').mean()
 		self.ids.accuracy.text = str(accuracy)
 		self.ids.precision.text = str(precision)
 		self.ids.f1.text = str(f1_score)
@@ -311,7 +317,8 @@ class RootWidget(TabbedPanel):
 
 	def prediction(self):
 		classifier_type = self.ids.choose_classifier.text
-		params = self.predict_model_parameters(classifier_type)
+		params = self.params
+		print params
 		if classifier_type == 'SVM':
 			C = float(params['C'])
 			kernel = params['kernel']
@@ -325,33 +332,33 @@ class RootWidget(TabbedPanel):
 		if classifier_type == 'ANN':
 			hidden_layer_sizes = tuple(params['hidden_layer_sizes'])
 			max_iter = int(params['max_iter'])
-			activation = params['activation']
+			# activation = params['activation']
 			solver = params['solver']
 			learning_rate = params['learning_rate']
-			momentum = params['momentum']
+			# momentum = params['momentum']
 
-			self.model = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, max_iter=max_iter, activation=activation, solver=solver, learning_rate=learning_rate, momentum=momentum)
+			self.model = MLPClassifier()
 
 		if classifier_type == 'Random Forest':
 			n_estimators = int(params['n_estimators'])
 			min_samples_leaf = float(params['min_samples_leaf'])
-			max_depth = int(params['max_depth'])
+			# max_depth = int(params['max_depth'])
 			min_samples_split = float(params['min_samples_split'])
 			min_weight_fraction_leaf = float(params['min_weight_fraction_leaf'])
-			max_leaf_nodes = int(params['max_leaf_nodes'])
+			# max_leaf_nodes = int(params['max_leaf_nodes'])
 
-			self.model = RandomForestClassifier(n_estimators=n_estimators, min_samples_leaf=min_samples_leaf, max_depth=max_depth, min_samples_split=min_samples_split, min_weight_fraction_leaf=min_weight_fraction_leaf, max_leaf_nodes=max_leaf_nodes)
+			self.model = RandomForestClassifier(n_estimators=n_estimators, min_samples_leaf=min_samples_leaf, min_weight_fraction_leaf=min_weight_fraction_leaf)
 
 
-		if classifier_type == 'k-NN':
+		if classifier_type == 'KNN':
 			n_neighbors = int(params['n_neighbors'])
-			p = int(params['p'])
+			# p = int(params['p'])
 			leaf_size = int(params['leaf_size'])
 			n_jobs = int(params['n_jobs'])
 			algorithm = params['algorithm']
 			weights = params['weights']
 
-			self.model = KNeighborsClassifier(n_neighbors=n_neighbors, p=p, leaf_size=leaf_size, n_jobs=n_jobs, algorithm=algorithm, weights=weights)
+			self.model = KNeighborsClassifier(n_neighbors=n_neighbors, leaf_size=leaf_size, n_jobs=n_jobs, algorithm=algorithm, weights=weights)
 		print self.model
 		print classifier_type
 
@@ -531,16 +538,16 @@ class RootWidget(TabbedPanel):
 				layout.add_widget(max_leaf_nodes_lower)
 				layout.add_widget(max_leaf_nodes_upper)
 
-			if self.ids.choose_classifier.text == 'k-NN':
+			if self.ids.choose_classifier.text == 'KNN':
 				layout.clear_widgets()
-				n_neighbours_label = Label(text='n neighbours', color=(1,1,1,2))
-				n_neighbours_lower = TextInput(multiline=False,
+				n_neighbors_label = Label(text='n neighbors', color=(1,1,1,2))
+				n_neighbors_lower = TextInput(multiline=False,
 	                                   size_hint=(None, None), height=30,width=140, hint_text='lower value')
-				n_neighbours_upper = TextInput(multiline=False,
+				n_neighbors_upper = TextInput(multiline=False,
 	                                   size_hint=(None, None), height=30,width=140, hint_text='upper value')
-				layout.add_widget(n_neighbours_label)
-				layout.add_widget(n_neighbours_lower)
-				layout.add_widget(n_neighbours_upper)
+				layout.add_widget(n_neighbors_label)
+				layout.add_widget(n_neighbors_lower)
+				layout.add_widget(n_neighbors_upper)
 
 				p_label = Label(text='p', color=(1,1,1,2))
 				p_lower = TextInput(multiline=False,
@@ -675,7 +682,7 @@ class RootWidget(TabbedPanel):
 		if text == 'Tree based':
 			self.ids.choose_classifier.values = ['Random Forest']
 		if text == 'Non-Tree based':
-			self.ids.choose_classifier.values = ['SVM','ANN','k-NN']
+			self.ids.choose_classifier.values = ['SVM','ANN','KNN']
 
 	def internet_popup(self, *args):
 		internet = InternetPopup(self)
@@ -762,7 +769,7 @@ class RootWidget(TabbedPanel):
 
 			min_samples_leaf_label = Label(text='min samples\n    leaf', color=(1,1,1,2),size=self.parent.size)
 			min_samples_leaf_input = TextInput(multiline=False,
-                                   size_hint=(None, None), height=30,width=140, text='1')
+                                   size_hint=(None, None), height=30,width=140, text='0.5')
 			layout.add_widget(min_samples_leaf_label)
 			layout.add_widget(min_samples_leaf_input)
 			self.params['min_samples_leaf'] = min_samples_leaf_input.text
@@ -801,14 +808,14 @@ class RootWidget(TabbedPanel):
 
 
 
-		if value=='k-NN':
+		if value=='KNN':
 			layout.clear_widgets()
-			n_neighbours_label = Label(text='n neighbours', color=(1,1,1,2))
-			n_neighbours_input = TextInput(multiline=False,
+			n_neighbors_label = Label(text='n neighbors', color=(1,1,1,2))
+			n_neighbors_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='5')
-			layout.add_widget(n_neighbours_label)
-			layout.add_widget(n_neighbours_input)
-			self.params['n_nighbors'] = n_neighbours_input.text
+			layout.add_widget(n_neighbors_label)
+			layout.add_widget(n_neighbors_input)
+			self.params['n_neighbors'] = n_neighbors_input.text
 
 			p_label = Label(text='p', color=(1,1,1,2))
 			p_input = TextInput(multiline=False,
