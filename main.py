@@ -127,6 +127,7 @@ class RootWidget(TabbedPanel):
 	big_dict = DictProperty()
 	empty_big_dict = DictProperty()
 	column_names = []
+	update_the_status = StringProperty('Welcome to DSS!')
 	number_of_columns = NumericProperty(len(column_names))
 	value = NumericProperty()
 	columns = ListProperty(column_names)
@@ -167,6 +168,12 @@ class RootWidget(TabbedPanel):
 
 	def import_dataset(self):
 
+		if self.file_name == 'None':
+			self.update_the_status = 'Please import some dataset!'
+			return
+		if not (self.file_name.endswith('.zip') or self.file_name.endswith('.csv')):
+			self.update_the_status = 'Only zip and csv extensions are allowed. More support will be available in future releases!'
+			return
 		if self.file_name.endswith('zip'):
 			# zf = zipfile.ZipFile(self.file_name)
 			self.data = pd.read_csv(self.file_name, compression='zip', sep=',', quotechar='"')
