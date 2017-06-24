@@ -1,6 +1,7 @@
 __version__ = 1.0
 
 import pandas as pd
+import numpy as np
 
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.lang import Builder
@@ -28,9 +29,21 @@ from kivy.core.window import Window
 from sklearn.svm import SVC # SVM
 from sklearn.ensemble import RandomForestClassifier #RandomForest
 from sklearn.neighbors import KNeighborsClassifier #KNeighbors
+from sklearn.tree import DecisionTreeClassifier #DecisionTree
 from sklearn.neural_network import MLPClassifier #ANN
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import label_binarize
+from sklearn.metrics import roc_curve, auc
+from sklearn.model_selection import train_test_split
+from sklearn.multiclass import OneVsRestClassifier
+
+
+from scipy import interp
+from itertools import cycle
+
+from sklearn.metrics import roc_curve, auc
+from sklearn.model_selection import StratifiedKFold
 
 
 
@@ -97,6 +110,101 @@ class LocalTestFilePopup(Popup):
 		self.root.import_test_dataset()
 		self.dismiss()
 
+class GraphPopup(Popup):
+	def __init__(self, root, **kwargs):
+		super(GraphPopup, self).__init__(**kwargs)
+		self.root = root
+		self.auto_dismiss = True
+
+	def view_graph(self, *args):
+		# Run classifier with cross-validation and plot ROC curves
+		X = self.root.data.drop(self.root.ids.predict_dropdown_choose_parameter.text, axis=1)
+		y = self.root.data[self.root.ids.predict_dropdown_choose_parameter.text]
+		classes = y.unique()
+		print classes
+		y = label_binarize(y, classes=[0,1,2])
+		n_classes = y.shape[1]
+
+		# Add noisy features to make the problem harder
+		random_state = np.random.RandomState(0)
+		n_samples, n_features = X.shape
+		X = np.c_[X, random_state.randn(n_samples, 200 * n_features)]
+
+		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.5, random_state=0)
+		classifier = OneVsRestClassifier(self.root.model)
+		y_score = classifier.fit(X_train, y_train).decision_function(X_test)
+		# Compute ROC curve and ROC area for each class
+		fpr = dict()
+		tpr = dict()
+		roc_auc = dict()
+		for i in range(n_classes):
+		    fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+		    roc_auc[i] = auc(fpr[i], tpr[i])
+
+
+		# Compute micro-average ROC curve and ROC area
+		fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
+		roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+
+		# plt.figure()
+		lw = 2
+		# plt.plot(fpr[2], tpr[2], color='darkorange', lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
+		# # plt.plot(fpr[2], tpr[2], color='darkorange',
+		# #          lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
+		# plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+		# plt.xlim([0.0, 1.0])
+		# plt.ylim([0.0, 1.05])
+		# plt.xlabel('False Positive Rate')
+		# plt.ylabel('True Positive Rate')
+		# plt.title('Receiver operating characteristic example')
+		# plt.legend(loc="lower right")
+		# plt.show()
+		# First aggregate all false positive rates
+		all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
+
+		# Then interpolate all ROC curves at this points
+		mean_tpr = np.zeros_like(all_fpr)
+		for i in range(n_classes):
+		    mean_tpr += interp(all_fpr, fpr[i], tpr[i])
+
+		# Finally average it and compute AUC
+		mean_tpr /= n_classes
+
+		fpr["macro"] = all_fpr
+		tpr["macro"] = mean_tpr
+		roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
+
+		# Plot all ROC curves
+		plt.figure()
+		plt.plot(fpr["micro"], tpr["micro"],
+		         label='micro-average ROC curve (area = {0:0.2f})'
+		               ''.format(roc_auc["micro"]),
+		         color='deeppink', linestyle=':', linewidth=4)
+
+		plt.plot(fpr["macro"], tpr["macro"],
+		         label='macro-average ROC curve (area = {0:0.2f})'
+		               ''.format(roc_auc["macro"]),
+		         color='navy', linestyle=':', linewidth=4)
+
+		colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
+		for i, color in zip(range(n_classes), colors):
+		    plt.plot(fpr[i], tpr[i], color=color, lw=lw,
+		             label='ROC curve of class {0} (area = {1:0.2f})'
+		             ''.format(i, roc_auc[i]))
+
+		plt.plot([0, 1], [0, 1], 'k--', lw=lw)
+		plt.xlim([0.0, 1.0])
+		plt.ylim([0.0, 1.05])
+		plt.xlabel('False Positive Rate')
+		plt.ylabel('True Positive Rate')
+		plt.title('Some extension of Receiver operating characteristic to multi-class')
+		plt.legend(loc="lower right")
+		# plt.show()
+
+		# print plt.gcf().axes
+		self.ids.graph_area.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+
 class ManualInputPopup(Popup):
 	
 
@@ -135,6 +243,8 @@ class RootWidget(TabbedPanel):
 	test_data = []
 	checkbox1 = CheckBox(group='algo_selection')
 	model = ObjectProperty()
+	# X = ''
+	# y = ''
 
 	params = DictProperty()
 	
@@ -242,56 +352,101 @@ class RootWidget(TabbedPanel):
 		sns.set_palette('colorblind')
 		
 		if graph == 'Count Plot':
-
-			sns.countplot(data=self.data, x=X.text, hue=hue.text)
+			if hue.text == 'Hue' or hue.text == '':
+				sns.countplot(data=self.data, x=X.text)
+			else:
+				sns.countplot(data=self.data, x=X.text, hue=hue.text)
 			plt.xticks(rotation='vertical')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'A count plot can be thought of as a histogram across a categorical, instead of quantitative, variable. The basic API and options are identical to those for barplot(), so you can compare counts across nested variables.'
 
 		elif graph == 'Pair Plot':
+			if hue.text == 'Hue' or hue.text == '':
+				sns.pairplot(self.data, size=6, x_vars=X.text, y_vars=Y.text )
+			else:
+				sns.pairplot(self.data, hue=hue.text, size=6, x_vars=X.text, y_vars=Y.text )
 			sns.pairplot(self.data, hue=hue.text, size=6, x_vars=X.text, y_vars=Y.text )
+			plt.xticks(rotation='vertical')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'By default, this plot will create a grid of Axes such that each variable in data will by shared in the y-axis across a single row and in the x-axis across a single column. The diagonal Axes are treated differently, drawing a plot to show the univariate distribution of the data for the variable in that column.'
 
 		elif graph == 'Factor Plot':
-			sns.factorplot(data=self.data, x=X.text, y=Y.text, col=hue.text)
-			# plt.x_ticks()
+			if hue.text == 'Hue' or hue.text == '':
+				sns.factorplot(data=self.data, x=X.text, y=Y.text)
+			else:
+				sns.factorplot(data=self.data, x=X.text, y=Y.text, col=hue.text)
+			plt.xticks(rotation='vertical')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'Draws a categorical plot onto a FacetGrid.'
 
 		elif graph == 'Dist Plot':
 			g = sns.FacetGrid(self.data, col=hue.text)  
 			g.map(sns.distplot, X.text)
+			plt.xticks(rotation='vertical')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'Flexibly plot a univariate distribution of observations.'
 
 		elif graph == 'Scatter Plot':
 			g = sns.FacetGrid(self.data, col=hue.text)  
 			g.map(plt.scatter, X.text, Y.text)
+			plt.xticks(rotation='vertical')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'A normal scatter plot.'
 
 		elif graph == 'Reg Plot':
 			g = sns.FacetGrid(self.data, col=hue.text)  
 			g.map(sns.regplot, X.text, Y.text)
+			plt.xticks(rotation='vertical')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'Plots data and a linear regression model fit.'
 
 		elif graph == 'Kde Plot':
 			g = sns.FacetGrid(self.data, col=hue.text, row="survived")  
 			g.map(sns.kdeplot, X.text, Y.text)
+			plt.xticks(rotation='vertical')
  			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'Fit and plot a univariate or bivariate kernel density estimate.'
 
 		elif graph == 'Joint Plot':
 			sns.jointplot(X.text, Y.text, data=self.data, kind='kde')
+			plt.xticks(rotation='vertical')
 			print plt.gcf().axes
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'Draw a plot of two variables with bivariate and univariate graphs.'
 
 		elif graph == 'Violin Plot':
 			sns.violinplot(x=X.text, y=Y.text, data=self.data)
 			print plt.gcf().axes
+			plt.xticks(rotation='vertical')
 			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'Draw a combination of boxplot and kernel density estimate.'
+
+		elif graph == 'Bar Plot':
+			sns.barplot(x=X.text, y=Y.text, data=self.data)
+			print plt.gcf().axes
+			plt.xticks(rotation='vertical')
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'A normal Bar plot.'
+
+		elif graph == 'Pie Plot':
+			sns.barplot(x=X.text, y=Y.text, data=self.data)
+			print plt.gcf().axes
+			plt.xticks(rotation='vertical')
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+
+		elif graph == 'Box Plot':
+			sns.boxplot(x=X.text, y=Y.text, hue=hue.text, data=self.data);
+			print plt.gcf().axes
+			plt.xticks(rotation='vertical')
+			graph_display.add_widget(FigureCanvasKivyAgg(plt.gcf()))
+			self.update_the_status = 'A normal Box plot.'
  
 	def predict(self, *args):
 		predict_graph_display = self.ids.predict_graph
@@ -307,15 +462,17 @@ class RootWidget(TabbedPanel):
 		precision = 'Multiclass label'
 		recall = 'Multiclass label'
 		print self.model
+		self.prediction()
+
 		self.model.fit(self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text])
-		accuracy = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='accuracy').mean()
+		accuracy = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=5, scoring='accuracy').mean()
 		if len(self.data[self.ids.predict_dropdown_choose_parameter.text].unique()) < 3:
-			precision = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='average_precision').mean()
-		f1_score = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='f1_weighted').mean()
+			precision = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=5, scoring='average_precision').mean()
+		f1_score = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=5, scoring='f1_weighted').mean()
 		if len(self.data[self.ids.predict_dropdown_choose_parameter.text].unique()) < 3:
-			recall = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='recall').mean()
+			recall = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=5, scoring='recall').mean()
 		if len(self.data[self.ids.predict_dropdown_choose_parameter.text].unique()) < 3:
-			roc_auc = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=10, scoring='roc_auc').mean()
+			roc_auc = cross_val_score(self.model, self.data.drop(self.ids.predict_dropdown_choose_parameter.text, axis=1), self.data[self.ids.predict_dropdown_choose_parameter.text], cv=5, scoring='roc_auc').mean()
 		self.ids.accuracy.text = str(accuracy)
 		self.ids.precision.text = str(precision)
 		self.ids.f1.text = str(f1_score)
@@ -356,8 +513,21 @@ class RootWidget(TabbedPanel):
 
 			self.model = RandomForestClassifier(n_estimators=n_estimators, min_samples_leaf=min_samples_leaf, min_weight_fraction_leaf=min_weight_fraction_leaf)
 
+		if classifier_type == 'Decision Tree':
+			max_depth_DT = int(params['max depth'])
+			min_samples_split_DT = int(params['min samples split'])
+			min_samples_leaf_DT = int(params['min samples leaf'])
+			min_weight_fraction_leaf_DT = float(params['min weight fraction leaf'])
+			max_leaf_nodes_DT = int(params['max leaf nodes'])
+			presort = False
+			if params['presort'] == 'True':
+				presort = True
 
-		if classifier_type == 'KNN':
+
+			self.model = DecisionTreeClassifier(max_depth=max_depth_DT, min_samples_split=min_samples_split_DT, min_samples_leaf=min_samples_leaf_DT,
+			min_weight_fraction_leaf=min_weight_fraction_leaf_DT, max_leaf_nodes=max_leaf_nodes_DT, presort=presort)
+
+		if classifier_type == 'KNN': 
 			n_neighbors = int(params['n_neighbors'])
 			# p = int(params['p'])
 			leaf_size = int(params['leaf_size'])
@@ -545,6 +715,60 @@ class RootWidget(TabbedPanel):
 				layout.add_widget(max_leaf_nodes_lower)
 				layout.add_widget(max_leaf_nodes_upper)
 
+			if self.ids.choose_classifier.text == 'Decision Tree':
+				layout.clear_widgets()
+				max_depth_DT_label = Label(text='max depth', color=(1,1,1,2))
+				max_depth_DT_lower = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='lower value')
+				max_depth_DT_upper = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='upper value')
+				layout.add_widget(max_depth_DT_label)
+				layout.add_widget(max_depth_DT_lower)
+				layout.add_widget(max_depth_DT_upper)
+
+				min_samples_split_DT_label = Label(text='min samples split', color=(1,1,1,2))
+				min_samples_split_DT_lower = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='lower value')
+				min_samples_split_DT_upper = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='upper value')
+				layout.add_widget(min_samples_split_DT_label)
+				layout.add_widget(min_samples_split_DT_lower)
+				layout.add_widget(min_samples_split_DT_upper)
+
+				min_samples_leaf_DT_label = Label(text='min samples leaf_size', color=(1,1,1,2))
+				min_samples_leaf_DT_lower = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='lower value')
+				min_samples_leaf_DT_upper = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='upper value')
+				layout.add_widget(min_samples_leaf_DT_label)
+				layout.add_widget(min_samples_leaf_DT_lower)
+				layout.add_widget(min_samples_leaf_DT_upper)
+
+				min_weight_fraction_leaf_DT_label = Label(text='min weight \n fraction leaf', color=(1,1,1,2))
+				min_weight_fraction_leaf_DT_lower = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='lower value')
+				min_weight_fraction_leaf_DT_upper = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='upper value')
+				layout.add_widget(min_weight_fraction_leaf_DT_label)
+				layout.add_widget(min_weight_fraction_leaf_DT_lower)
+				layout.add_widget(min_weight_fraction_leaf_DT_upper)
+
+				max_leaf_nodes_DT_label = Label(text='max leaf nodes', color=(1,1,1,2))
+				max_leaf_nodes_DT_lower = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='lower value')
+				max_leaf_nodes_DT_upper = TextInput(multiline=False,
+	                                   size_hint=(None, None), height=30,width=140, hint_text='upper value')
+				layout.add_widget(max_leaf_nodes_DT_label)
+				layout.add_widget(max_leaf_nodes_DT_lower)
+				layout.add_widget(max_leaf_nodes_DT_upper)
+
+				presort_label = Label(text = 'presort', color=(1,1,1,2))
+				presort_mainbutton = Button(text='Choose presort',size_hint=(None, None), height=30,width=140)
+				presort_mainbutton.bind(on_press=lambda x:self.dropDown(['False', 'True'], presort_mainbutton))
+				layout.add_widget(presort_label)
+				layout.add_widget(presort_mainbutton)	
+
+
 			if self.ids.choose_classifier.text == 'KNN':
 				layout.clear_widgets()
 				n_neighbors_label = Label(text='n neighbors', color=(1,1,1,2))
@@ -687,7 +911,7 @@ class RootWidget(TabbedPanel):
 		self.ids.choose_classifier.text = '< Select >'
 
 		if text == 'Tree based':
-			self.ids.choose_classifier.values = ['Random Forest']
+			self.ids.choose_classifier.values = ['Random Forest','Decision Tree']
 		if text == 'Non-Tree based':
 			self.ids.choose_classifier.values = ['SVM','ANN','KNN']
 
@@ -710,6 +934,10 @@ class RootWidget(TabbedPanel):
 	def manual_input_popup(self, *args):
 		man_input = ManualInputPopup(self)
 		man_input.open()
+
+	def graph_popup(self, *args):
+		graph_input = GraphPopup(self)
+		graph_input.open()
 
 	def predict_model_parameters(self, value):
 		layout = self.ids.layout_predict_parameters
@@ -772,8 +1000,6 @@ class RootWidget(TabbedPanel):
 			layout.add_widget(n_estimators_input)
 			self.params['n_estimators'] = n_estimators_input.text
 
-
-
 			min_samples_leaf_label = Label(text='min samples\n    leaf', color=(1,1,1,2),size=self.parent.size)
 			min_samples_leaf_input = TextInput(multiline=False,
                                    size_hint=(None, None), height=30,width=140, text='0.5')
@@ -813,6 +1039,51 @@ class RootWidget(TabbedPanel):
 			if self.checkbox1.active == True:
 				self.populate_predict_algo_parameters()
 
+		if value=='Decision Tree':
+			layout.clear_widgets()
+			max_depth_DT_label = Label(text='max depth', color=(1,1,1,2))
+			max_depth_DT_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='1')
+			layout.add_widget(max_depth_DT_label)
+			layout.add_widget(max_depth_DT_input)
+			self.params['max depth'] = max_depth_DT_input.text
+
+			min_samples_split_DT_label = Label(text='min samples split', color=(1,1,1,2))
+			min_samples_split_DT_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='2')
+			layout.add_widget(min_samples_split_DT_label)
+			layout.add_widget(min_samples_split_DT_input)
+			self.params['min samples split'] = min_samples_split_DT_input.text
+
+			min_samples_leaf_DT_label = Label(text='min samples leaf', color=(1,1,1,2))
+			min_samples_leaf_DT_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='1')
+			layout.add_widget(min_samples_leaf_DT_label)
+			layout.add_widget(min_samples_leaf_DT_input)
+			self.params['min samples leaf'] = min_samples_leaf_DT_input.text
+
+			min_weight_fraction_leaf_DT_label = Label(text='min weight_fraction leaf', color=(1,1,1,2))
+			min_weight_fraction_leaf_DT_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='0.')
+			layout.add_widget(min_weight_fraction_leaf_DT_label)
+			layout.add_widget(min_weight_fraction_leaf_DT_input)
+			self.params['min weight fraction leaf'] = min_weight_fraction_leaf_DT_input.text
+
+			max_leaf_nodes_DT_label = Label(text='max leaf nodes', color=(1,1,1,2))
+			max_leaf_nodes_DT_input = TextInput(multiline=False,
+                                   size_hint=(None, None), height=30,width=140, text='2')
+			layout.add_widget(max_leaf_nodes_DT_label)
+			layout.add_widget(max_leaf_nodes_DT_input)
+			self.params['max leaf nodes'] = max_leaf_nodes_DT_input.text
+
+			presort_label = Label(text = 'presort', color=(1,1,1,2))
+			presort_spinner = Spinner(text='False', values=['True','False'])
+			layout.add_widget(presort_label)
+			layout.add_widget(presort_spinner)
+			self.params['presort'] = presort_spinner.text
+
+			if self.checkbox1.active == True:
+				self.populate_predict_algo_parameters()
 
 
 		if value=='KNN':

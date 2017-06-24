@@ -295,7 +295,7 @@
 							font_size: 20
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
-							on_press: root.dropDown(root.column_names, *args)
+							on_press: root.dropDown(root.column_names + [''], *args)
 							
 						Button:
 							id: btn_y
@@ -304,7 +304,7 @@
 							font_size: 20
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
-							on_press: root.dropDown(root.column_names, *args)
+							on_press: root.dropDown(root.column_names + [''], *args)
 						Button:
 							id: btn_hue
 							text: 'hue'
@@ -312,7 +312,7 @@
 							# background_normal: './static/back_btn.jpg'
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
-							on_press: root.dropDown(root.column_names, *args)					
+							on_press: root.dropDown(root.column_names + [''], *args)					
 
 						Button:
 							id: btn_type
@@ -321,7 +321,7 @@
 							# pos_hint: {'top': .55}
 							size_hint: (.2, 1)
 							# background_normal: './static/back_btn.jpg'
-							on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot', 'Violin Plot'], *args)
+							on_press: root.dropDown(['Count Plot', 'Pair Plot', 'Factor Plot', 'Dist Plot', 'Scatter Plot', 'Reg Plot', 'Kde Plot', 'Joint Plot', 'Violin Plot', 'Bar Plot', 'Pie Plot', 'Box Plot'], *args)
 
 						Button:
 							text: 'Plot'
@@ -767,6 +767,11 @@
 							# size_hint: (None,.2)
 							# height: 5
 							disabled: True
+
+						Button:
+							text: 'View mothafocking graphs'
+							on_release:root.graph_popup(*args)
+
 					BoxLayout:
 						size_hint_y: .1
 						Button:
@@ -1168,7 +1173,23 @@
 					padding: [5, 5, 5, 20]
 
 			
-
+<GraphPopup>:
+	title: 'View Mothafoking Graphs'
+	title_align: 'center'
+	title_size: 20
+	size_hint: (None, None)
+	size: (600, 600)
+	BoxLayout:	
+		orientation: 'vertical'
+		BoxLayout:
+			id: graph_area
+			size_hint_y: 0.9
+		BoxLayout:
+			size_hint_y: 0.1
+			Button:
+				text: 'View'
+				size_hint_x: 0.2
+				on_release: root.view_graph(*args)
 				
 				
 
